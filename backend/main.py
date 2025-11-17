@@ -1,11 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from sqlalchemy import text
 from database import get_db, engine
 from config import get_settings
 import logging
+from pathlib import Path
 
 # Import routers
 from routers import auth, products
@@ -63,6 +65,19 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(products.router)
+
+
+# =============================================
+# Static Files
+# =============================================
+
+# Create static directory if it doesn't exist
+STATIC_DIR = Path(__file__).parent / "static"
+STATIC_DIR.mkdir(exist_ok=True)
+(STATIC_DIR / "images" / "products").mkdir(parents=True, exist_ok=True)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
 # =============================================

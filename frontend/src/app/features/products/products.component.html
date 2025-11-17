@@ -59,15 +59,13 @@
       <div class="products-grid">
         @for (product of products; track product.id) {
           <div class="product-card">
-            @if (product.image) {
-              <div class="product-image">
-                <img [src]="product.image" [alt]="product.title" />
-              </div>
-            } @else {
-              <div class="product-image placeholder">
-                <span>No Image</span>
-              </div>
-            }
+            <div class="product-image">
+              <img 
+                [src]="getProductImageUrl(product)" 
+                [alt]="product.title"
+                (error)="onImageError($event)"
+              />
+            </div>
             
             <div class="product-info">
               <h3>{{ product.title }}</h3>

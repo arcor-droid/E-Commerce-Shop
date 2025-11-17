@@ -63,4 +63,30 @@ export class ProductsComponent implements OnInit {
       this.loadProducts(categoryId);
     }
   }
+
+  /**
+   * Get product image URL with fallback to placeholder
+   */
+  getProductImageUrl(product: Product): string {
+    // If product has an image path, construct full URL to backend
+    if (product.image) {
+      // If it's already a full URL, use it
+      if (product.image.startsWith('http://') || product.image.startsWith('https://')) {
+        return product.image;
+      }
+      // Otherwise, prepend backend URL
+      return `http://localhost:8000${product.image}`;
+    }
+    
+    // Fallback to placeholder
+    return `https://placehold.co/400x400/4f46e5/white?text=${encodeURIComponent(product.title.substring(0, 20))}`;
+  }
+
+  /**
+   * Handle image load errors by replacing with placeholder
+   */
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'https://placehold.co/400x400/gray/white?text=No+Image';
+  }
 }
