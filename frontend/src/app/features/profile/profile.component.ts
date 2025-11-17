@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
+import { CanComponentDeactivate } from '../../core/interfaces/can-component-deactivate.interface';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +13,7 @@ import { User } from '../../core/models/user.model';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, CanComponentDeactivate {
   private readonly fb = inject(FormBuilder);
   readonly authService = inject(AuthService);
 
@@ -21,6 +22,7 @@ export class ProfileComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   isLoading = false;
+  private hasUnsavedChanges = false;
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
@@ -41,6 +43,23 @@ export class ProfileComponent implements OnInit {
       country: [user.country || ''],
       payment_method: [user.payment_method || '']
     });
+
+    // Track form changes
+    this.profileForm.valueChanges.subscribe(() => {
+      this.hasUnsavedChanges = this.profileForm.dirty;
+    });
+  }
+
+  /**
+   * Check if user can leave page with unsaved changes
+   */
+  canDeactivate(): boolean {
+    if (this.hasUnsavedChanges) {
+      return confirm(
+        'You have unsaved changes. Are you sure you want to leave this page? All changes will be lost.'
+      );
+    }
+    return true;
   }
 
   onSubmit(): void {
@@ -56,6 +75,8 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.isLoading = false;
         this.successMessage = 'Profile updated successfully!';
+        this.hasUnsavedChanges = false;
+        this.profileForm.markAsPristine(); // Mark form as pristine after save
         setTimeout(() => this.successMessage = '', 3000);
       },
       error: (error) => {
