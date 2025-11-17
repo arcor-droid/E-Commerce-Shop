@@ -2,7 +2,6 @@
 name = "ecommerce-backend"
 version = "1.0.0"
 description = "E-Commerce Shop Backend API with FastAPI"
-readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi==0.115.5",

@@ -44,7 +44,7 @@ services:
       - ecommerce-network
     volumes:
       - ./backend:/app
-    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: sh -c "uv sync --no-install-project && .venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
 
   # Angular Frontend
   frontend:
