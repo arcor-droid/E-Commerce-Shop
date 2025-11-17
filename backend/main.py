@@ -8,7 +8,7 @@ from config import get_settings
 import logging
 
 # Import routers
-from routers import auth
+from routers import auth, products
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -62,6 +62,7 @@ app.add_middleware(
 # =============================================
 
 app.include_router(auth.router)
+app.include_router(products.router)
 
 
 # =============================================

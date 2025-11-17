@@ -3,6 +3,7 @@
     <div class="nav-content">
       <h1 class="logo">E-Commerce Shop</h1>
       <div class="nav-links">
+        <a routerLink="/products" class="nav-link">Products</a>
         @if (authService.isAuthenticated$ | async) {
           <span class="user-info">
             Welcome, {{ (authService.currentUser$ | async)?.nickname }}!
@@ -42,7 +43,7 @@
           <div class="dashboard-card">
             <h3>Products</h3>
             <p>Browse our product catalog</p>
-            <span class="card-link disabled">Coming Soon →</span>
+            <a routerLink="/products" class="card-link">View Products →</a>
           </div>
           <div class="dashboard-card">
             <h3>Cart</h3>

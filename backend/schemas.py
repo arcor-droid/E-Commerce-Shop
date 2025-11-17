@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
-from typing import Optional
+from typing import Optional, Dict, Any
 from datetime import datetime
 from models import UserRole
 
@@ -119,3 +119,66 @@ class PasswordChange(BaseModel):
         if 'new_password' in info.data and v != info.data['new_password']:
             raise ValueError('Passwords do not match')
         return v
+
+
+# =============================================
+# Product Category Schemas
+# =============================================
+
+class ProductCategoryResponse(BaseModel):
+    """Schema for product category response."""
+    id: int
+    name: str
+    title: str
+    image: Optional[str] = None
+    display_order: int
+    
+    class Config:
+        from_attributes = True
+
+
+# =============================================
+# Product Schemas
+# =============================================
+
+class ProductCreate(BaseModel):
+    """Schema for creating a new product."""
+    category_id: int
+    title: str = Field(..., max_length=255)
+    description: Optional[str] = None
+    base_price: float = Field(..., gt=0, description="Base price must be greater than 0")
+    image: Optional[str] = Field(None, max_length=500)
+    options: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    stock_quantity: int = Field(default=0, ge=0)
+    is_active: bool = Field(default=True)
+
+
+class ProductUpdate(BaseModel):
+    """Schema for updating a product."""
+    category_id: Optional[int] = None
+    title: Optional[str] = Field(None, max_length=255)
+    description: Optional[str] = None
+    base_price: Optional[float] = Field(None, gt=0)
+    image: Optional[str] = Field(None, max_length=500)
+    options: Optional[Dict[str, Any]] = None
+    stock_quantity: Optional[int] = Field(None, ge=0)
+    is_active: Optional[bool] = None
+
+
+class ProductResponse(BaseModel):
+    """Schema for product response."""
+    id: int
+    category_id: int
+    category: ProductCategoryResponse
+    title: str
+    description: Optional[str] = None
+    base_price: float
+    image: Optional[str] = None
+    options: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    stock_quantity: int
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True

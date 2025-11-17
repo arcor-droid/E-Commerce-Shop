@@ -1,0 +1,112 @@
+<div class="products-container">
+  <nav class="navbar">
+    <div class="nav-content">
+      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
+      <div class="nav-links">
+        <a routerLink="/" class="nav-link">Home</a>
+        @if (authService.isAuthenticated$ | async) {
+          <a routerLink="/profile" class="nav-link">Profile</a>
+          <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
+        } @else {
+          <a routerLink="/login" class="nav-link">Login</a>
+        }
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="header">
+      <h1>Products</h1>
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin/products/new" class="btn btn-primary">Add Product</a>
+      }
+    </div>
+
+    <!-- Category Filter -->
+    <div class="category-filter">
+      <button 
+        class="category-btn" 
+        [class.active]="selectedCategory === null"
+        (click)="filterByCategory(null)"
+      >
+        All Products
+      </button>
+      @for (category of categories; track category.id) {
+        <button 
+          class="category-btn" 
+          [class.active]="selectedCategory === category.id"
+          (click)="filterByCategory(category.id)"
+        >
+          {{ category.title }}
+        </button>
+      }
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="loading">Loading products...</div>
+    }
+
+    <!-- Products Grid -->
+    @if (!isLoading && products.length > 0) {
+      <div class="products-grid">
+        @for (product of products; track product.id) {
+          <div class="product-card">
+            @if (product.image) {
+              <div class="product-image">
+                <img [src]="product.image" [alt]="product.title" />
+              </div>
+            } @else {
+              <div class="product-image placeholder">
+                <span>No Image</span>
+              </div>
+            }
+            
+            <div class="product-info">
+              <h3>{{ product.title }}</h3>
+              <p class="category">{{ product.category.title }}</p>
+              
+              @if (product.description) {
+                <p class="description">{{ product.description }}</p>
+              }
+              
+              <div class="product-footer">
+                <span class="price">{{ product.base_price | currency:'EUR' }}</span>
+                
+                @if (product.stock_quantity > 0) {
+                  <span class="stock in-stock">In Stock ({{ product.stock_quantity }})</span>
+                } @else {
+                  <span class="stock out-of-stock">Out of Stock</span>
+                }
+              </div>
+
+              <div class="actions">
+                <button class="btn btn-primary btn-small">View Details</button>
+                @if (authService.isAdmin()) {
+                  <button class="btn btn-secondary btn-small">Edit</button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading && products.length === 0) {
+      <div class="empty-state">
+        <p>No products found.</p>
+        @if (authService.isAdmin()) {
+          <a routerLink="/admin/products/new" class="btn btn-primary">Add First Product</a>
+        }
+      </div>
+    }
+  </main>
+</div>
