@@ -1,0 +1,131 @@
+<div class="product-detail-container">
+  <nav class="navbar">
+    <div class="nav-content">
+      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
+      <div class="nav-links">
+        <a routerLink="/" class="nav-link">Home</a>
+        <a routerLink="/products" class="nav-link">Products</a>
+        @if (authService.isAuthenticated$ | async) {
+          <a routerLink="/profile" class="nav-link">Profile</a>
+          <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
+        } @else {
+          <a routerLink="/login" class="nav-link">Login</a>
+        }
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <!-- Back Button -->
+    <button (click)="goBack()" class="btn btn-secondary back-btn">
+      ← Back to Products
+    </button>
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="loading">Loading product...</div>
+    }
+
+    <!-- Product Details -->
+    @if (!isLoading && product) {
+      <div class="product-detail">
+        <div class="product-image-section">
+          <img 
+            [src]="getProductImageUrl(product)" 
+            [alt]="product.title"
+            class="product-image"
+          />
+        </div>
+
+        <div class="product-info-section">
+          <div class="category-badge">{{ product.category.title }}</div>
+          <h1 class="product-title">{{ product.title }}</h1>
+          
+          @if (product.description) {
+            <p class="product-description">{{ product.description }}</p>
+          }
+
+          <div class="product-meta">
+            <div class="meta-item">
+              <span class="meta-label">Price:</span>
+              <span class="meta-value price">{{ product.base_price | currency:'EUR' }}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Stock:</span>
+              @if (product.stock_quantity > 0) {
+                <span class="meta-value stock in-stock">
+                  {{ product.stock_quantity }} available
+                </span>
+              } @else {
+                <span class="meta-value stock out-of-stock">
+                  Out of Stock
+                </span>
+              }
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Status:</span>
+              <span class="meta-value" [class.active]="product.is_active" [class.inactive]="!product.is_active">
+                {{ product.is_active ? 'Active' : 'Inactive' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Product Options -->
+          @if (getOptions().length > 0) {
+            <div class="product-options">
+              <h3>Available Options</h3>
+              <div class="options-grid">
+                @for (option of getOptions(); track option.key) {
+                  <div class="option-item">
+                    <span class="option-key">{{ option.key }}:</span>
+                    <span class="option-value">
+                      @if (isArray(option.value)) {
+                        {{ option.value.join(', ') }}
+                      } @else {
+                        {{ option.value }}
+                      }
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Actions -->
+          <div class="product-actions">
+            @if (product.stock_quantity > 0 && product.is_active) {
+              <button class="btn btn-primary btn-large">
+                Add to Cart
+              </button>
+            }
+
+            @if (authService.isAdmin()) {
+              <button routerLink="/admin/products/{{ product.id }}/edit" class="btn btn-secondary">
+                Edit Product
+              </button>
+              <button (click)="deleteProduct()" class="btn btn-danger">
+                Delete Product
+              </button>
+            }
+          </div>
+
+          <!-- Timestamps -->
+          <div class="product-timestamps">
+            <small>Created: {{ product.created_at | date:'medium' }}</small>
+            <small>Updated: {{ product.updated_at | date:'medium' }}</small>
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+</div>
+

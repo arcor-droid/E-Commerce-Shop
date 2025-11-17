@@ -86,7 +86,7 @@
               </div>
 
               <div class="actions">
-                <button class="btn btn-primary btn-small">View Details</button>
+                <button routerLink="/products/{{ product.id }}" class="btn btn-primary btn-small">View Details</button>
                 @if (authService.isAdmin()) {
                   <button class="btn btn-secondary btn-small">Edit</button>
                 }
