@@ -102,9 +102,6 @@ CREATE TABLE CartItems (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE,
     
-    -- Ensure user doesn't have duplicate cart items for same product
-    UNIQUE KEY unique_cart_item (user_id, product_id, selected_options(255)),
-    
     INDEX idx_user (user_id),
     INDEX idx_product (product_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
