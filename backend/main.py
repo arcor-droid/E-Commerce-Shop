@@ -7,6 +7,9 @@ from database import get_db, engine
 from config import get_settings
 import logging
 
+# Import routers
+from routers import auth
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -52,6 +55,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# =============================================
+# Include Routers
+# =============================================
+
+app.include_router(auth.router)
 
 
 # =============================================
