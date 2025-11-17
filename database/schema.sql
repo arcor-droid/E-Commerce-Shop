@@ -19,7 +19,7 @@ CREATE TABLE Users (
     email VARCHAR(255) NOT NULL UNIQUE,
     nickname VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer',
+    role ENUM('CUSTOMER', 'ADMIN') NOT NULL DEFAULT 'CUSTOMER',
     
     -- Address fields (optional)
     street_address VARCHAR(255),
@@ -181,11 +181,11 @@ CREATE TABLE OrderItems (
 -- Create an admin user (password: admin123)
 -- Note: In production, use proper password hashing via backend
 INSERT INTO Users (email, nickname, password_hash, role) VALUES
-('admin@shop.com', 'admin', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYqYo8hiZ6W', 'admin');
+('admin@shop.com', 'admin', '$2b$12$KIS8Jf3pr6ZUDR1xY55Xj.Y5IVOd/KTZeqB7t87JKq5TpzlLfQqhW', 'ADMIN');
 
 -- Create a test customer (password: customer123)
 INSERT INTO Users (email, nickname, password_hash, role, street_address, city, postal_code, country) VALUES
-('customer@example.com', 'testuser', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYqYo8hiZ6W', 'customer', '123 Test Street', 'Berlin', '10115', 'Germany');
+('customer@example.com', 'testuser', '$2b$12$luSqdFGSQpFQ9tVU.S7l5.oafzreqAAi3iZDK5uBbTaPwMv4Djil.', 'CUSTOMER', '123 Test Street', 'Berlin', '10115', 'Germany');
 
 -- Create product categories
 INSERT INTO ProductCategories (name, title, image, display_order) VALUES
