@@ -9,13 +9,12 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     curl \
     && rm -rf /var/lib/apt/lists/* \
-    && curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Add uv to PATH
-ENV PATH="/root/.cargo/bin:${PATH}"
+    && curl -LsSf https://astral.sh/uv/install.sh | sh \
+    && mv /root/.cargo/bin/uv /usr/local/bin/uv
 
 # Copy pyproject.toml and uv.lock for better caching
-COPY pyproject.toml uv.lock* ./
+COPY pyproject.toml ./
+COPY uv.lock* ./
 
 # Install Python dependencies with uv
 RUN uv sync --frozen --no-dev
