@@ -42,7 +42,10 @@ export class ProductsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.productService.getProducts(categoryId, true).subscribe({
+    // Admins see all products (active + inactive)
+    const showAll = this.authService.isAdmin();
+
+    this.productService.getProducts(categoryId, showAll).subscribe({
       next: (products) => {
         this.products = products;
         this.isLoading = false;

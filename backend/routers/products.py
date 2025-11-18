@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from typing import List
+from typing import List, Optional
 
 from database import get_db
 from models import Product, ProductCategory, User
@@ -39,19 +39,23 @@ async def get_categories(db: AsyncSession = Depends(get_db)):
 @router.get("", response_model=List[ProductResponse])
 async def get_products(
     category_id: int = None,
-    is_active: bool = True,
+    is_active: Optional[bool] = True,  # Default to True for public users
+    show_all: bool = False,  # If True, ignore is_active filter (for admins)
     db: AsyncSession = Depends(get_db)
 ):
     """
     Get all products with optional filtering.
     Public endpoint - no authentication required.
+    By default, returns only active products.
+    Use show_all=true to get both active and inactive products (useful for admins).
     """
     query = select(Product).options(selectinload(Product.category))
     
     if category_id:
         query = query.filter(Product.category_id == category_id)
     
-    if is_active is not None:
+    # Only filter by is_active if show_all is False
+    if not show_all and is_active is not None:
         query = query.filter(Product.is_active == is_active)
     
     query = query.order_by(Product.created_at.desc())

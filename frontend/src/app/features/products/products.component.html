@@ -58,13 +58,16 @@
     @if (!isLoading && products.length > 0) {
       <div class="products-grid">
         @for (product of products; track product.id) {
-          <div class="product-card">
+          <div class="product-card" [class.inactive-product]="!product.is_active">
             <div class="product-image">
               <img 
                 [src]="getProductImageUrl(product)" 
                 [alt]="product.title"
                 (error)="onImageError($event)"
               />
+              @if (!product.is_active) {
+                <div class="inactive-badge">Inactive</div>
+              }
             </div>
             
             <div class="product-info">
@@ -88,7 +91,7 @@
               <div class="actions">
                 <button routerLink="/products/{{ product.id }}" class="btn btn-primary btn-small">View Details</button>
                 @if (authService.isAdmin()) {
-                  <button class="btn btn-secondary btn-small">Edit</button>
+                  <button routerLink="/admin/products/{{ product.id }}/edit" class="btn btn-secondary btn-small">Edit</button>
                 }
               </div>
             </div>

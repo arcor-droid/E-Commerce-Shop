@@ -1,0 +1,204 @@
+<div class="product-form-container">
+  <nav class="navbar">
+    <div class="nav-content">
+      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
+      <div class="nav-links">
+        <a routerLink="/" class="nav-link">Home</a>
+        <a routerLink="/products" class="nav-link">Products</a>
+        @if (authService.isAuthenticated$ | async) {
+          <a routerLink="/profile" class="nav-link">Profile</a>
+          <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
+        } @else {
+          <a routerLink="/login" class="nav-link">Login</a>
+        }
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="form-header">
+      <h1>{{ isEditMode ? 'Edit Product' : 'Create New Product' }}</h1>
+      <button (click)="cancel()" class="btn btn-secondary">Cancel</button>
+    </div>
+
+    <!-- Success Message -->
+    @if (successMessage) {
+      <div class="alert alert-success">
+        {{ successMessage }}
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading && isEditMode) {
+      <div class="loading">Loading product...</div>
+    }
+
+    <!-- Product Form -->
+    @if (!isLoading || !isEditMode) {
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+        <div class="form-grid">
+          <!-- Title -->
+          <div class="form-group full-width">
+            <label for="title" class="required">Product Title</label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              class="form-control"
+              placeholder="Enter product title"
+            />
+            @if (productForm.get('title')?.invalid && productForm.get('title')?.touched) {
+              <div class="error-message">
+                @if (productForm.get('title')?.errors?.['required']) {
+                  Title is required
+                }
+                @if (productForm.get('title')?.errors?.['minlength']) {
+                  Title must be at least 3 characters
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label for="category" class="required">Category</label>
+            <select
+              id="category"
+              formControlName="category_id"
+              class="form-control"
+            >
+              <option [value]="null">Select a category</option>
+              @for (category of categories; track category.id) {
+                <option [value]="category.id">{{ category.title }}</option>
+              }
+            </select>
+            @if (productForm.get('category_id')?.invalid && productForm.get('category_id')?.touched) {
+              <div class="error-message">Category is required</div>
+            }
+          </div>
+
+          <!-- Price -->
+          <div class="form-group">
+            <label for="price" class="required">Price (€)</label>
+            <input
+              type="number"
+              id="price"
+              formControlName="base_price"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+            />
+            @if (productForm.get('base_price')?.invalid && productForm.get('base_price')?.touched) {
+              <div class="error-message">
+                @if (productForm.get('base_price')?.errors?.['required']) {
+                  Price is required
+                }
+                @if (productForm.get('base_price')?.errors?.['min']) {
+                  Price must be at least 0
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Stock Quantity -->
+          <div class="form-group">
+            <label for="stock" class="required">Stock Quantity</label>
+            <input
+              type="number"
+              id="stock"
+              formControlName="stock_quantity"
+              class="form-control"
+              placeholder="0"
+              min="0"
+            />
+            @if (productForm.get('stock_quantity')?.invalid && productForm.get('stock_quantity')?.touched) {
+              <div class="error-message">
+                @if (productForm.get('stock_quantity')?.errors?.['required']) {
+                  Stock quantity is required
+                }
+                @if (productForm.get('stock_quantity')?.errors?.['min']) {
+                  Stock must be at least 0
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Image URL -->
+          <div class="form-group">
+            <label for="image">Image URL</label>
+            <input
+              type="text"
+              id="image"
+              formControlName="image"
+              class="form-control"
+              placeholder="/static/images/products/example.jpg"
+            />
+            <small class="help-text">Use path like: /static/images/products/image.jpg</small>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="form-control"
+              rows="4"
+              placeholder="Enter product description"
+            ></textarea>
+          </div>
+
+          <!-- Options (JSON) -->
+          <div class="form-group full-width">
+            <label for="options">Options (JSON)</label>
+            <textarea
+              id="options"
+              formControlName="options_json"
+              class="form-control code"
+              rows="6"
+              placeholder='{"sizes": ["S", "M", "L"], "colors": ["black", "white"]}'
+            ></textarea>
+            <small class="help-text">
+              Format: JSON object with arrays or strings. Example: {{"{"}} "sizes": ["S", "M", "L"], "colors": ["black"] {{"}"}}
+            </small>
+          </div>
+
+          <!-- Active Status -->
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                formControlName="is_active"
+              />
+              <span>Product is active</span>
+            </label>
+            <small class="help-text">Inactive products won't be visible to customers</small>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" (click)="cancel()" class="btn btn-secondary">
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="productForm.invalid || isLoading"
+          >
+            {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Product' : 'Create Product') }}
+          </button>
+        </div>
+      </form>
+    }
+  </main>
+</div>
+

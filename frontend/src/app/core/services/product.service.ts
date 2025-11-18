@@ -20,15 +20,15 @@ export class ProductService {
   /**
    * Get all products with optional filtering
    */
-  getProducts(categoryId?: number, isActive?: boolean): Observable<Product[]> {
+  getProducts(categoryId?: number, showAll: boolean = false): Observable<Product[]> {
     let params = new HttpParams();
     
-    if (categoryId !== undefined) {
+    if (categoryId !== undefined && categoryId !== null) {
       params = params.set('category_id', categoryId.toString());
     }
     
-    if (isActive !== undefined) {
-      params = params.set('is_active', isActive.toString());
+    if (showAll) {
+      params = params.set('show_all', 'true');
     }
 
     return this.http.get<Product[]>(`${this.API_URL}/products`, { params });

@@ -24,6 +24,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
   },
   {
+    path: 'admin/products/new',
+    loadComponent: () => import('./features/admin/product-form/product-form.component').then(m => m.ProductFormComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/products/:id/edit',
+    loadComponent: () => import('./features/admin/product-form/product-form.component').then(m => m.ProductFormComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'profile',
     loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent),
     canActivate: [authGuard],
