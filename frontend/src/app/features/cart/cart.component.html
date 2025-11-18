@@ -92,8 +92,11 @@
         <span><strong>${{ cart.subtotal | number:'1.2-2' }}</strong></span>
       </div>
 
-      <button (click)="proceedToCheckout()" class="btn-checkout">
-        Proceed to Checkout
+      <button (click)="proceedToCheckout()" 
+              [disabled]="checkoutLoading || cart.items.length === 0"
+              class="btn-checkout">
+        <span *ngIf="!checkoutLoading">Proceed to Checkout</span>
+        <span *ngIf="checkoutLoading">Processing... ⏳</span>
       </button>
 
       <button (click)="continueShopping()" class="btn-continue">

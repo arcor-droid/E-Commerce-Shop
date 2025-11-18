@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CartService, CartSummary, CartItem } from '../../core/services/cart.service';
+import { OrderService } from '../../core/services/order.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -19,11 +20,13 @@ export class CartComponent implements OnInit, OnDestroy {
   };
   loading = true;
   error = '';
+  checkoutLoading = false;
   
   private cartSubscription?: Subscription;
 
   constructor(
     private cartService: CartService,
+    private orderService: OrderService,
     private router: Router
   ) {}
 
@@ -163,9 +166,26 @@ export class CartComponent implements OnInit, OnDestroy {
    * Navigate to checkout
    */
   proceedToCheckout(): void {
-    // TODO: Implement checkout functionality
-    alert('Checkout functionality coming soon!');
-    // this.router.navigate(['/checkout']);
+    if (this.cart.items.length === 0) {
+      this.error = 'Your cart is empty!';
+      return;
+    }
+
+    this.checkoutLoading = true;
+    this.error = '';
+
+    this.orderService.checkout().subscribe({
+      next: (response) => {
+        console.log('Order placed successfully:', response);
+        // Navigate to order confirmation with order ID
+        this.router.navigate(['/orders', response.order.id]);
+      },
+      error: (err) => {
+        console.error('Checkout error:', err);
+        this.error = err.error?.detail || 'Failed to complete checkout. Please try again.';
+        this.checkoutLoading = false;
+      }
+    });
   }
 
   /**

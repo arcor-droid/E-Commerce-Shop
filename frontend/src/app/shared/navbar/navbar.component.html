@@ -14,6 +14,9 @@
           }
         </a>
         
+        <!-- Orders Link -->
+        <a routerLink="/orders" class="nav-link" routerLinkActive="active">📦 Orders</a>
+        
         <!-- Admin Links -->
         @if (authService.isAdmin()) {
           <a routerLink="/admin/products/new" class="nav-link admin-link" routerLinkActive="active">
