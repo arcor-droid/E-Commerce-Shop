@@ -6,6 +6,7 @@
         <a routerLink="/" class="nav-link">Home</a>
         <a routerLink="/products" class="nav-link">Products</a>
         @if (authService.isAuthenticated$ | async) {
+          <a routerLink="/cart" class="nav-link">🛒 Cart</a>
           <a routerLink="/profile" class="nav-link">Profile</a>
           <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
         } @else {
@@ -25,6 +26,13 @@
     @if (errorMessage) {
       <div class="alert alert-error">
         {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Success Message -->
+    @if (successMessage) {
+      <div class="alert alert-success">
+        {{ successMessage }}
       </div>
     }
 
@@ -82,20 +90,46 @@
           <!-- Product Options -->
           @if (getOptions().length > 0) {
             <div class="product-options">
-              <h3>Available Options</h3>
+              <h3>Select Options</h3>
               <div class="options-grid">
                 @for (option of getOptions(); track option.key) {
                   <div class="option-item">
-                    <span class="option-key">{{ option.key }}:</span>
-                    <span class="option-value">
-                      @if (isArray(option.value)) {
-                        {{ option.value.join(', ') }}
-                      } @else {
-                        {{ option.value }}
-                      }
-                    </span>
+                    <label class="option-label">{{ option.key }}:</label>
+                    @if (isArray(option.value)) {
+                      <select [(ngModel)]="selectedOptions[option.key]" class="option-select">
+                        @for (val of option.value; track val) {
+                          <option [value]="val">{{ val }}</option>
+                        }
+                      </select>
+                    } @else {
+                      <span class="option-value">{{ option.value }}</span>
+                    }
                   </div>
                 }
+              </div>
+            </div>
+          }
+
+          <!-- Quantity Selector -->
+          @if (product.stock_quantity > 0 && product.is_active) {
+            <div class="quantity-section">
+              <label class="quantity-label">Quantity:</label>
+              <div class="quantity-controls">
+                <button (click)="decreaseQuantity()" 
+                        [disabled]="quantity <= 1"
+                        class="btn-quantity">
+                  −
+                </button>
+                <input type="number" 
+                       [(ngModel)]="quantity" 
+                       min="1"
+                       [max]="product.stock_quantity"
+                       class="quantity-input">
+                <button (click)="increaseQuantity()" 
+                        [disabled]="quantity >= product.stock_quantity"
+                        class="btn-quantity">
+                  +
+                </button>
               </div>
             </div>
           }
@@ -103,9 +137,17 @@
           <!-- Actions -->
           <div class="product-actions">
             @if (product.stock_quantity > 0 && product.is_active) {
-              <button class="btn btn-primary btn-large">
-                Add to Cart
-              </button>
+              @if (isAuthenticated()) {
+                <button (click)="addToCart()" 
+                        [disabled]="isAddingToCart"
+                        class="btn btn-primary btn-large">
+                  {{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}
+                </button>
+              } @else {
+                <button routerLink="/login" class="btn btn-primary btn-large">
+                  Login to Add to Cart
+                </button>
+              }
             }
 
             @if (authService.isAdmin()) {
