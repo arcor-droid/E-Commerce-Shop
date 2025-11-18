@@ -177,6 +177,8 @@ export class CartComponent implements OnInit, OnDestroy {
     this.orderService.checkout().subscribe({
       next: (response) => {
         console.log('Order placed successfully:', response);
+        // Refresh cart to update the badge count to 0
+        this.cartService.refreshCart();
         // Navigate to order confirmation with order ID
         this.router.navigate(['/orders', response.order.id]);
       },
