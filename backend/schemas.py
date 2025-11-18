@@ -265,3 +265,40 @@ class CheckoutResponse(BaseModel):
     message: str
     order: OrderResponse
 
+
+class OrderStatusUpdate(BaseModel):
+    """Schema for updating order status (admin only)."""
+    status: str = Field(..., description="New order status")
+    admin_notes: Optional[str] = Field(None, description="Admin notes about the status change")
+    
+    @field_validator('status')
+    @classmethod
+    def validate_status(cls, v):
+        """Validate that status is one of the allowed values."""
+        from models import OrderStatus
+        valid_statuses = [status.value for status in OrderStatus]
+        if v not in valid_statuses:
+            raise ValueError(f'Status must be one of: {", ".join(valid_statuses)}')
+        return v
+
+
+class AdminOrderResponse(BaseModel):
+    """Schema for admin order response with user details."""
+    id: int
+    user_id: int
+    user_email: str
+    user_nickname: str
+    order_date: datetime
+    status: str
+    subtotal: float
+    tax: float
+    shipping_cost: float
+    total: float
+    customer_notes: Optional[str] = None
+    admin_notes: Optional[str] = None
+    order_items: list[OrderItemResponse]
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
+
