@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CartService, CartSummary, CartItem } from '../../core/services/cart.service';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -10,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
   cart: CartSummary = {
     items: [],
     total_items: 0,
@@ -18,6 +19,8 @@ export class CartComponent implements OnInit {
   };
   loading = true;
   error = '';
+  
+  private cartSubscription?: Subscription;
 
   constructor(
     private cartService: CartService,
@@ -25,7 +28,25 @@ export class CartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Subscribe to cart updates from the service
+    this.cartSubscription = this.cartService.cart$.subscribe({
+      next: (cart) => {
+        this.cart = cart;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading cart:', err);
+        this.error = 'Failed to load cart. Please try again.';
+        this.loading = false;
+      }
+    });
+    
+    // Load cart initially
     this.loadCart();
+  }
+  
+  ngOnDestroy(): void {
+    this.cartSubscription?.unsubscribe();
   }
 
   /**
