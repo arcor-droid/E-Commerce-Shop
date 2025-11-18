@@ -223,3 +223,45 @@ class CartSummary(BaseModel):
     total_items: int
     subtotal: float  # Sum of (product.base_price * quantity)
 
+
+
+
+# =============================================
+# Order Schemas
+# =============================================
+
+class OrderItemResponse(BaseModel):
+    """Schema for order item response."""
+    id: int
+    product_title: str
+    product_image: Optional[str] = None
+    quantity: int
+    price: float
+    selected_options: Optional[Dict[str, Any]] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class OrderResponse(BaseModel):
+    """Schema for order response."""
+    id: int
+    user_id: int
+    order_date: datetime
+    status: str
+    subtotal: float
+    tax: float
+    shipping_cost: float
+    total: float
+    customer_notes: Optional[str] = None
+    order_items: list[OrderItemResponse]
+    
+    class Config:
+        from_attributes = True
+
+
+class CheckoutResponse(BaseModel):
+    """Schema for checkout response."""
+    message: str
+    order: OrderResponse
+

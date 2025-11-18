@@ -120,7 +120,7 @@ class Order(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("Users.id", ondelete="RESTRICT"), nullable=False, index=True)
     order_date = Column(TIMESTAMP, server_default=func.now(), nullable=False, index=True)
-    status = Column(Enum(OrderStatus), nullable=False, default=OrderStatus.PENDING, index=True)
+    status = Column(Enum(OrderStatus, values_callable=lambda x: [e.value for e in x]), nullable=False, default=OrderStatus.PENDING, index=True)
     
     # Shipping information (captured at order time)
     shipping_street = Column(String(255), nullable=True)
