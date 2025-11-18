@@ -1,0 +1,104 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <h1>Shopping Cart</h1>
+    <button *ngIf="cart.items.length > 0" (click)="clearCart()" class="btn-clear">
+      Clear Cart
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <p>Loading cart...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="loadCart()" class="btn-retry">Retry</button>
+  </div>
+
+  <!-- Empty Cart -->
+  <div *ngIf="!loading && !error && cart.items.length === 0" class="empty-cart">
+    <h2>Your cart is empty</h2>
+    <p>Add some products to get started!</p>
+    <button (click)="continueShopping()" class="btn-primary">Continue Shopping</button>
+  </div>
+
+  <!-- Cart Items -->
+  <div *ngIf="!loading && !error && cart.items.length > 0" class="cart-content">
+    <div class="cart-items">
+      <div *ngFor="let item of cart.items" class="cart-item">
+        <div class="item-image">
+          <img [src]="'http://localhost:8000' + item.product.image" 
+               [alt]="item.product.title"
+               onerror="this.src='https://via.placeholder.com/150'">
+        </div>
+
+        <div class="item-details">
+          <h3>
+            <a [routerLink]="['/products', item.product.id]">{{ item.product.title }}</a>
+          </h3>
+          <p class="item-description">{{ item.product.description }}</p>
+          <p class="item-options" *ngIf="item.selected_options">
+            <strong>Options:</strong> {{ formatOptions(item.selected_options) }}
+          </p>
+        </div>
+
+        <div class="item-price">
+          <p class="price">${{ item.product.base_price | number:'1.2-2' }}</p>
+        </div>
+
+        <div class="item-quantity">
+          <div class="quantity-controls">
+            <button (click)="decreaseQuantity(item)" 
+                    [disabled]="item.quantity <= 1"
+                    class="btn-quantity">
+              −
+            </button>
+            <input type="number" 
+                   [(ngModel)]="item.quantity" 
+                   (change)="updateQuantity(item, item.quantity)"
+                   min="1"
+                   class="quantity-input">
+            <button (click)="increaseQuantity(item)" class="btn-quantity">
+              +
+            </button>
+          </div>
+        </div>
+
+        <div class="item-total">
+          <p class="total-price">${{ getItemTotal(item) | number:'1.2-2' }}</p>
+        </div>
+
+        <div class="item-actions">
+          <button (click)="removeItem(item)" class="btn-remove" title="Remove item">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="cart-summary">
+      <h2>Order Summary</h2>
+      
+      <div class="summary-row">
+        <span>Items ({{ cart.total_items }})</span>
+        <span>${{ cart.subtotal | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="summary-row summary-total">
+        <span><strong>Total</strong></span>
+        <span><strong>${{ cart.subtotal | number:'1.2-2' }}</strong></span>
+      </div>
+
+      <button (click)="proceedToCheckout()" class="btn-checkout">
+        Proceed to Checkout
+      </button>
+
+      <button (click)="continueShopping()" class="btn-continue">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+</div>

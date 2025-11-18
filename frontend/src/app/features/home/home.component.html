@@ -5,6 +5,12 @@
       <div class="nav-links">
         <a routerLink="/products" class="nav-link">Products</a>
         @if (authService.isAuthenticated$ | async) {
+          <a routerLink="/cart" class="nav-link cart-link">
+            <span class="cart-icon">🛒</span>
+            @if (cartCount > 0) {
+              <span class="cart-badge">{{ cartCount }}</span>
+            }
+          </a>
           <span class="user-info">
             Welcome, {{ (authService.currentUser$ | async)?.nickname }}!
           </span>
@@ -48,7 +54,7 @@
           <div class="dashboard-card">
             <h3>Cart</h3>
             <p>View your shopping cart</p>
-            <span class="card-link disabled">Coming Soon →</span>
+            <a routerLink="/cart" class="card-link">View Cart →</a>
           </div>
           <div class="dashboard-card">
             <h3>Orders</h3>

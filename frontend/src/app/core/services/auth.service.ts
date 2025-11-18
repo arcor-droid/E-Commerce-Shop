@@ -10,6 +10,7 @@ import {
   UserUpdateRequest,
   PasswordChangeRequest
 } from '../models/user.model';
+import { CartService } from './cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ import {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private cartService?: CartService; // Lazy inject to avoid circular dependency
   
   private readonly API_URL = 'http://localhost:8000';
   private readonly TOKEN_KEY = 'access_token';
@@ -32,6 +34,16 @@ export class AuthService {
     if (this.hasToken()) {
       this.loadCurrentUser().subscribe();
     }
+  }
+  
+  /**
+   * Get cart service lazily to avoid circular dependency
+   */
+  private getCartService(): CartService {
+    if (!this.cartService) {
+      this.cartService = inject(CartService);
+    }
+    return this.cartService;
   }
 
   /**
@@ -60,6 +72,8 @@ export class AuthService {
         this.setToken(response.access_token);
         this.isAuthenticatedSubject.next(true);
         this.loadCurrentUser().subscribe();
+        // Refresh cart after login
+        this.getCartService().refreshCart();
       })
     );
   }
@@ -71,6 +85,8 @@ export class AuthService {
     this.removeToken();
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
+    // Reset cart after logout
+    this.getCartService().resetCart();
     this.router.navigate(['/login']);
   }
 
