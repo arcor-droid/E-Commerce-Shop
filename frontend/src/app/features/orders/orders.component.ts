@@ -47,12 +47,22 @@ export class OrdersComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    const statusLower = status.toLowerCase();
-    if (statusLower.includes('pending')) return 'status-pending';
-    if (statusLower.includes('confirmed')) return 'status-confirmed';
-    if (statusLower.includes('delivered')) return 'status-delivered';
-    if (statusLower.includes('canceled')) return 'status-canceled';
-    return 'status-default';
+    switch (status) {
+      case 'Pending':
+        return 'status-pending';
+      case 'Confirmed':
+        return 'status-confirmed';
+      case 'Payment Pending':
+        return 'status-payment-pending';
+      case 'Payment Received':
+        return 'status-payment-received';
+      case 'Delivered':
+        return 'status-delivered';
+      case 'Canceled':
+        return 'status-canceled';
+      default:
+        return 'status-default';
+    }
   }
 
   formatDate(dateString: string): string {

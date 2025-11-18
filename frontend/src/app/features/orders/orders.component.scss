@@ -129,23 +129,33 @@
   white-space: nowrap;
   
   &.status-pending {
-    background: #fff3e0;
-    color: #f57c00;
+    background: #fff3cd;
+    color: #856404;
   }
   
   &.status-confirmed {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  &.status-payment-pending {
+    background: #ffe5cc;
+    color: #804000;
+  }
+
+  &.status-payment-received {
+    background: #d4edda;
+    color: #155724;
   }
   
   &.status-delivered {
-    background: #e8f5e9;
-    color: #388e3c;
+    background: #c3e6cb;
+    color: #155724;
   }
   
   &.status-canceled {
-    background: #ffebee;
-    color: #d32f2f;
+    background: #f8d7da;
+    color: #721c24;
   }
   
   &.status-default {
