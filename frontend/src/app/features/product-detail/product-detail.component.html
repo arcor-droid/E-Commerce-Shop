@@ -1,21 +1,4 @@
 <div class="product-detail-container">
-  <nav class="navbar">
-    <div class="nav-content">
-      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
-      <div class="nav-links">
-        <a routerLink="/" class="nav-link">Home</a>
-        <a routerLink="/products" class="nav-link">Products</a>
-        @if (authService.isAuthenticated$ | async) {
-          <a routerLink="/cart" class="nav-link">🛒 Cart</a>
-          <a routerLink="/profile" class="nav-link">Profile</a>
-          <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
-        } @else {
-          <a routerLink="/login" class="nav-link">Login</a>
-        }
-      </div>
-    </div>
-  </nav>
-
   <main class="main-content">
     <!-- Back Button -->
     <button (click)="goBack()" class="btn btn-secondary back-btn">

@@ -1,9 +1,7 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { CartService } from '../../core/services/cart.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,21 +10,6 @@ import { Subscription } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent {
   authService = inject(AuthService);
-  private cartService = inject(CartService);
-  
-  cartCount = 0;
-  private cartSubscription?: Subscription;
-
-  ngOnInit(): void {
-    // Subscribe to cart updates
-    this.cartSubscription = this.cartService.cart$.subscribe(cart => {
-      this.cartCount = cart.total_items;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.cartSubscription?.unsubscribe();
-  }
 }
