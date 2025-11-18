@@ -182,3 +182,44 @@ class ProductResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+
+# =============================================
+# Cart Schemas
+# =============================================
+
+class CartItemCreate(BaseModel):
+    """Schema for creating a cart item."""
+    product_id: int
+    quantity: int = Field(..., gt=0, description="Quantity must be greater than 0")
+    selected_options: Optional[Dict[str, Any]] = None  # e.g. {"size": "M", "color": "black"}
+
+
+class CartItemUpdate(BaseModel):
+    """Schema for updating a cart item."""
+    quantity: int = Field(..., gt=0, description="Quantity must be greater than 0")
+    selected_options: Optional[Dict[str, Any]] = None
+
+
+class CartItemResponse(BaseModel):
+    """Schema for cart item response."""
+    id: int
+    user_id: int
+    product_id: int
+    product: ProductResponse  # Include full product details
+    quantity: int
+    selected_options: Optional[Dict[str, Any]] = None
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class CartSummary(BaseModel):
+    """Schema for cart summary with totals."""
+    items: list[CartItemResponse]
+    total_items: int
+    subtotal: float  # Sum of (product.base_price * quantity)
+

@@ -10,7 +10,7 @@ import logging
 from pathlib import Path
 
 # Import routers
-from routers import auth, products
+from routers import auth, products, cart
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -65,6 +65,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(products.router)
+app.include_router(cart.router)
 
 
 # =============================================
