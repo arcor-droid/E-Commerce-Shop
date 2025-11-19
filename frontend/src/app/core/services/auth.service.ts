@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, of, map } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, of, map, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   User,
@@ -18,7 +18,7 @@ import { CartService } from './cart.service';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private cartService?: CartService; // Lazy inject to avoid circular dependency
+  private readonly cartService = inject(CartService); // Direct injection - no circular dependency
   
   private readonly API_URL = 'http://localhost:8000';
   private readonly TOKEN_KEY = 'access_token';
@@ -32,18 +32,15 @@ export class AuthService {
   constructor() {
     // Load user on init if token exists
     if (this.hasToken()) {
-      this.loadCurrentUser().subscribe();
+      this.loadCurrentUser().subscribe({
+        error: (err) => {
+          console.warn('Failed to load user on init, clearing token:', err);
+          this.removeToken();
+          this.currentUserSubject.next(null);
+          this.isAuthenticatedSubject.next(false);
+        }
+      });
     }
-  }
-  
-  /**
-   * Get cart service lazily to avoid circular dependency
-   */
-  private getCartService(): CartService {
-    if (!this.cartService) {
-      this.cartService = inject(CartService);
-    }
-    return this.cartService;
   }
 
   /**
@@ -56,7 +53,7 @@ export class AuthService {
   /**
    * Login with email/nickname and password
    */
-  login(username: string, password: string): Observable<TokenResponse> {
+  login(username: string, password: string): Observable<User> {
     const formData = new URLSearchParams();
     formData.set('username', username);
     formData.set('password', password);
@@ -69,11 +66,22 @@ export class AuthService {
       }
     ).pipe(
       tap(response => {
+        // Store token first
         this.setToken(response.access_token);
         this.isAuthenticatedSubject.next(true);
-        this.loadCurrentUser().subscribe();
-        // Refresh cart after login
-        this.getCartService().refreshCart();
+      }),
+      // Load user data before completing login
+      switchMap(() => this.loadCurrentUser()),
+      tap(() => {
+        // Refresh cart after user is successfully loaded
+        this.cartService.refreshCart();
+      }),
+      catchError((error) => {
+        console.error('Login failed:', error);
+        // Clean up on error
+        this.removeToken();
+        this.isAuthenticatedSubject.next(false);
+        throw error;
       })
     );
   }
@@ -86,7 +94,7 @@ export class AuthService {
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
     // Reset cart after logout
-    this.getCartService().resetCart();
+    this.cartService.resetCart();
     this.router.navigate(['/login']);
   }
 
@@ -95,10 +103,20 @@ export class AuthService {
    */
   loadCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.API_URL}/auth/me`).pipe(
-      tap(user => this.currentUserSubject.next(user)),
-      catchError(() => {
-        this.logout();
-        return of();
+      tap(user => {
+        this.currentUserSubject.next(user);
+        console.log('User loaded successfully:', user.nickname, 'Role:', user.role);
+      }),
+      catchError((error) => {
+        console.error('Failed to load user:', error);
+        // Only logout if it's an authentication error (401)
+        if (error.status === 401) {
+          this.removeToken();
+          this.currentUserSubject.next(null);
+          this.isAuthenticatedSubject.next(false);
+        }
+        // Re-throw error so login() can catch it
+        throw error;
       })
     );
   }
