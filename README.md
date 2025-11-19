@@ -234,16 +234,21 @@ Make sure you have the following installed:
    cd E-Commerce-Shop
    ```
 
-2. **Create environment file** (if needed)
+2. **Create environment file**
    ```bash
    cp .env.example .env
-   # Edit .env with your configuration
+   # Edit .env with your configuration if needed
    ```
 
-3. **Start all services**
+3. **Start all services** (first time will take a few minutes)
    ```bash
-   docker-compose up --build
+   docker compose up --build
    ```
+   
+   Wait for the build to complete. You'll see:
+   - MySQL: Initializing database schema
+   - Backend: Installing Python dependencies and starting FastAPI
+   - Frontend: Installing npm packages and starting Angular dev server
 
 4. **Access the application**
    - 🌐 Frontend: [http://localhost:4200](http://localhost:4200)
@@ -258,6 +263,31 @@ Make sure you have the following installed:
    - **Test Customer:**
      - Email: `customer@example.com`
      - Password: `customer123`
+
+**🎉 That's it! The application is now running in Docker containers.**
+
+> **Note:** First startup takes 2-3 minutes as npm installs packages. Subsequent startups are much faster.
+
+### Docker Commands
+
+```bash
+# Start services in background
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
+
+# Rebuild containers after code changes
+docker compose up --build
+
+# Clean slate (removes all data!)
+docker compose down -v
+```
+
+For detailed Docker usage, see [DOCKER.md](DOCKER.md)
 
 ### Local Development Setup
 

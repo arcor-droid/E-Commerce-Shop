@@ -51,6 +51,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: development
     container_name: ecommerce-frontend
     restart: unless-stopped
     ports:
@@ -62,7 +63,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: npm start
+    environment:
+      - NODE_ENV=development
 
 networks:
   ecommerce-network:
