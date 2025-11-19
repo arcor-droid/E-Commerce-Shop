@@ -115,16 +115,49 @@
           </div>
 
           <!-- Image URL -->
-          <div class="form-group">
-            <label for="image">Image URL</label>
+          <div class="form-group full-width">
+            <label for="image">Product Image</label>
+            
+            <!-- Image URL Input -->
             <input
               type="text"
               id="image"
               formControlName="image"
               class="form-control"
-              placeholder="/static/images/products/example.jpg"
+              placeholder="https://images.unsplash.com/photo-..."
             />
-            <small class="help-text">Use path like: /static/images/products/image.jpg</small>
+            <small class="help-text">Enter an image URL (e.g., from Unsplash, Imgur, or your CDN)</small>
+            
+            <!-- File Upload Option -->
+            <div class="file-upload-section">
+              <label class="file-upload-label">
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                  class="file-input"
+                />
+                <span class="btn btn-secondary btn-small">
+                  📁 Choose File
+                </span>
+              </label>
+              
+              @if (selectedFile) {
+                <span class="file-name">{{ selectedFile.name }}</span>
+                <button type="button" (click)="clearImage()" class="btn-icon" title="Clear">✕</button>
+              }
+            </div>
+
+            <!-- Image Preview -->
+            @if (imagePreview) {
+              <div class="image-preview">
+                <img [src]="imagePreview" alt="Preview" />
+              </div>
+            } @else if (productForm.get('image')?.value) {
+              <div class="image-preview">
+                <img [src]="productForm.get('image')?.value" alt="Current product image" />
+              </div>
+            }
           </div>
 
           <!-- Description -->

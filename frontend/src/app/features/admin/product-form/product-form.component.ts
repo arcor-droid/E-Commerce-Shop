@@ -26,6 +26,8 @@ export class ProductFormComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
 
   ngOnInit(): void {
     // Check if user is admin
@@ -170,5 +172,29 @@ export class ProductFormComponent implements OnInit {
     } else {
       this.router.navigate(['/products']);
     }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+      
+      // For now, we'll use a placeholder URL since we don't have backend upload
+      // In a real implementation, you would upload to a service like Cloudinary, S3, etc.
+      this.errorMessage = 'Note: File selected. For now, please use an image URL from Unsplash or another CDN.';
+    }
+  }
+
+  clearImage(): void {
+    this.selectedFile = null;
+    this.imagePreview = null;
+    this.productForm.patchValue({ image: '' });
   }
 }
