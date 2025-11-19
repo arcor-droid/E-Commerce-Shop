@@ -93,8 +93,8 @@
             </div>
           }
 
-          <!-- Quantity Selector - Inline -->
-          @if (product.stock_quantity > 0 && product.is_active) {
+          <!-- Quantity Selector - Inline (only for non-admin users) -->
+          @if (product.stock_quantity > 0 && product.is_active && !authService.isAdmin()) {
             <div class="quantity-section">
               <label class="quantity-label">Quantity</label>
               <div class="quantity-controls">
@@ -119,22 +119,26 @@
 
           <!-- Actions -->
           <div class="product-actions">
-            <div class="primary-actions">
-              @if (product.stock_quantity > 0 && product.is_active) {
-                @if (isAuthenticated()) {
-                  <button (click)="addToCart()" 
-                          [disabled]="isAddingToCart"
-                          class="btn btn-primary btn-lg">
-                    {{ isAddingToCart ? 'Adding...' : '🛒 Add to Cart' }}
-                  </button>
-                } @else {
-                  <button routerLink="/login" class="btn btn-primary btn-lg">
-                    Login to Purchase
-                  </button>
+            <!-- Customer Actions -->
+            @if (!authService.isAdmin()) {
+              <div class="primary-actions">
+                @if (product.stock_quantity > 0 && product.is_active) {
+                  @if (isAuthenticated()) {
+                    <button (click)="addToCart()" 
+                            [disabled]="isAddingToCart"
+                            class="btn btn-primary btn-lg">
+                      {{ isAddingToCart ? 'Adding...' : '🛒 Add to Cart' }}
+                    </button>
+                  } @else {
+                    <button routerLink="/login" class="btn btn-primary btn-lg">
+                      Login to Purchase
+                    </button>
+                  }
                 }
-              }
-            </div>
+              </div>
+            }
 
+            <!-- Admin Actions -->
             @if (authService.isAdmin()) {
               <div class="admin-actions">
                 <button routerLink="/admin/products/{{ product.id }}/edit" class="btn btn-secondary btn-sm">

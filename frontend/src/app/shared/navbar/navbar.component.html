@@ -14,20 +14,22 @@
       </a>
       
       @if (authService.isAuthenticated$ | async) {
-        <!-- Cart Link with Badge -->
-        <a routerLink="/cart" class="nav-link cart-link" routerLinkActive="active">
-          <span class="cart-icon">🛒</span>
-          @if (cartCount > 0) {
-            <span class="cart-badge">{{ cartCount }}</span>
-          }
-          <span class="text">Cart</span>
-        </a>
-        
-        <!-- Orders Link -->
-        <a routerLink="/orders" class="nav-link" routerLinkActive="active">
-          <span class="icon">📦</span>
-          <span class="text">Orders</span>
-        </a>
+        <!-- Cart Link with Badge (only for non-admin users) -->
+        @if (!authService.isAdmin()) {
+          <a routerLink="/cart" class="nav-link cart-link" routerLinkActive="active">
+            <span class="cart-icon">🛒</span>
+            @if (cartCount > 0) {
+              <span class="cart-badge">{{ cartCount }}</span>
+            }
+            <span class="text">Cart</span>
+          </a>
+          
+          <!-- Orders Link (only for non-admin users) -->
+          <a routerLink="/orders" class="nav-link" routerLinkActive="active">
+            <span class="icon">📦</span>
+            <span class="text">Orders</span>
+          </a>
+        }
         
         <!-- Admin Links -->
         @if (authService.isAdmin()) {
@@ -79,18 +81,21 @@
     </a>
     
     @if (authService.isAuthenticated$ | async) {
-      <a routerLink="/cart" class="nav-link cart-link" routerLinkActive="active" (click)="closeMobileMenu()">
-        <span class="cart-icon">🛒</span>
-        @if (cartCount > 0) {
-          <span class="cart-badge">{{ cartCount }}</span>
-        }
-        <span class="text">Cart</span>
-      </a>
-      
-      <a routerLink="/orders" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
-        <span class="icon">📦</span>
-        <span class="text">Orders</span>
-      </a>
+      <!-- Cart and Orders Links (only for non-admin users) -->
+      @if (!authService.isAdmin()) {
+        <a routerLink="/cart" class="nav-link cart-link" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="cart-icon">🛒</span>
+          @if (cartCount > 0) {
+            <span class="cart-badge">{{ cartCount }}</span>
+          }
+          <span class="text">Cart</span>
+        </a>
+        
+        <a routerLink="/orders" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="icon">📦</span>
+          <span class="text">Orders</span>
+        </a>
+      }
       
       @if (authService.isAdmin()) {
         <a routerLink="/admin/products/new" class="nav-link admin-link" routerLinkActive="active" (click)="closeMobileMenu()">
