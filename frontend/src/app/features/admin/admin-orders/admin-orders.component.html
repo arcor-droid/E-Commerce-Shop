@@ -1,0 +1,208 @@
+<div class="admin-orders-container">
+  <div class="admin-header">
+    <h1>Order Management</h1>
+    <p class="subtitle">Manage and track customer orders</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="search">Search:</label>
+      <input 
+        type="text" 
+        id="search" 
+        [(ngModel)]="searchQuery" 
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search by customer or order ID..."
+        class="search-input"
+      >
+    </div>
+
+    <div class="filter-group">
+      <label for="status-filter">Status:</label>
+      <select 
+        id="status-filter" 
+        [(ngModel)]="statusFilter" 
+        (ngModelChange)="onStatusFilterChange()"
+        class="filter-select"
+      >
+        <option value="all">All Statuses</option>
+        @for (status of statusOptions; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="results-count">
+      {{ filteredOrders.length }} order(s) found
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-message">
+      <p>Loading orders...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+      <button (click)="loadOrders()" class="btn-retry">Retry</button>
+    </div>
+  }
+
+  <!-- Orders Table -->
+  @if (!loading && !error) {
+    @if (filteredOrders.length === 0) {
+      <div class="empty-state">
+        <p>No orders found matching your filters.</p>
+      </div>
+    } @else {
+      <div class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Actions</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of filteredOrders; track order.id) {
+              <tr>
+                <td class="order-id">#{{ order.id }}</td>
+                <td class="customer-info">
+                  <div class="customer-name">{{ order.user_nickname }}</div>
+                  <div class="customer-email">{{ order.user_email }}</div>
+                </td>
+                <td class="order-date">{{ formatDate(order.order_date) }}</td>
+                <td class="order-total">{{ formatPrice(order.total) }}</td>
+                <td class="order-status">
+                  <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                    {{ order.status }}
+                  </span>
+                </td>
+                <td class="order-actions">
+                  <select 
+                    [value]="order.status" 
+                    (change)="onStatusChange(order, $any($event.target).value)"
+                    class="status-select"
+                  >
+                    @for (status of statusOptions; track status) {
+                      <option [value]="status" [selected]="status === order.status">
+                        {{ status }}
+                      </option>
+                    }
+                  </select>
+                </td>
+                <td class="expand-cell">
+                  <button 
+                    (click)="toggleOrderDetails(order.id)" 
+                    class="btn-expand"
+                    [attr.aria-expanded]="expandedOrderId === order.id"
+                  >
+                    {{ expandedOrderId === order.id ? '▲' : '▼' }}
+                  </button>
+                </td>
+              </tr>
+              
+              <!-- Expandable Order Details -->
+              @if (expandedOrderId === order.id) {
+                <tr class="order-details-row">
+                  <td colspan="7">
+                    <div class="order-details">
+                      <div class="details-section">
+                        <h3>Order Items</h3>
+                        <div class="order-items">
+                          @for (item of order.order_items; track item.id) {
+                            <div class="order-item">
+                              @if (item.product_image) {
+                                <img 
+                                  [src]="'http://localhost:8000' + item.product_image" 
+                                  [alt]="item.product_title"
+                                  class="item-image"
+                                >
+                              }
+                              <div class="item-info">
+                                <h4>{{ item.product_title }}</h4>
+                                <p class="item-quantity">Quantity: {{ item.quantity }}</p>
+                                <p class="item-price">{{ formatPrice(item.price) }} each</p>
+                                @if (item.selected_options) {
+                                  <div class="item-options">
+                                    @for (option of item.selected_options | keyvalue; track option.key) {
+                                      <span class="option-badge">
+                                        {{ option.key }}: {{ option.value }}
+                                      </span>
+                                    }
+                                  </div>
+                                }
+                              </div>
+                              <div class="item-total">
+                                {{ formatPrice(item.price * item.quantity) }}
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="details-section">
+                        <h3>Order Summary</h3>
+                        <div class="order-summary">
+                          <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span>{{ formatPrice(order.subtotal) }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span>Tax:</span>
+                            <span>{{ formatPrice(order.tax) }}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span>Shipping:</span>
+                            <span>{{ formatPrice(order.shipping_cost) }}</span>
+                          </div>
+                          <div class="summary-row total-row">
+                            <span>Total:</span>
+                            <span>{{ formatPrice(order.total) }}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      @if (order.customer_notes) {
+                        <div class="details-section">
+                          <h3>Customer Notes</h3>
+                          <p class="notes">{{ order.customer_notes }}</p>
+                        </div>
+                      }
+
+                      @if (order.admin_notes) {
+                        <div class="details-section">
+                          <h3>Admin Notes</h3>
+                          <p class="notes">{{ order.admin_notes }}</p>
+                        </div>
+                      }
+
+                      <div class="details-section">
+                        <h3>Order Information</h3>
+                        <div class="order-info-grid">
+                          <div><strong>User ID:</strong> {{ order.user_id }}</div>
+                          <div><strong>Order Date:</strong> {{ formatDate(order.order_date) }}</div>
+                          <div><strong>Last Updated:</strong> {{ formatDate(order.updated_at) }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

@@ -24,6 +24,18 @@ export interface Order {
   order_items: OrderItem[];
 }
 
+export interface AdminOrder extends Order {
+  user_email: string;
+  user_nickname: string;
+  admin_notes: string | null;
+  updated_at: string;
+}
+
+export interface OrderStatusUpdate {
+  status: string;
+  admin_notes?: string;
+}
+
 export interface CheckoutResponse {
   message: string;
   order: Order;
@@ -56,5 +68,28 @@ export class OrderService {
    */
   getOrder(orderId: number): Observable<Order> {
     return this.http.get<Order>(`${this.apiUrl}/${orderId}`);
+  }
+
+  // Admin methods
+
+  /**
+   * Get all orders (admin only)
+   */
+  getAllOrders(): Observable<AdminOrder[]> {
+    return this.http.get<AdminOrder[]>(`${this.apiUrl}/admin/all`);
+  }
+
+  /**
+   * Get a specific order with user details (admin only)
+   */
+  getAdminOrder(orderId: number): Observable<AdminOrder> {
+    return this.http.get<AdminOrder>(`${this.apiUrl}/admin/${orderId}`);
+  }
+
+  /**
+   * Update order status (admin only)
+   */
+  updateOrderStatus(orderId: number, update: OrderStatusUpdate): Observable<AdminOrder> {
+    return this.http.put<AdminOrder>(`${this.apiUrl}/admin/${orderId}/status`, update);
   }
 }
