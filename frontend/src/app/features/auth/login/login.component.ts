@@ -40,6 +40,7 @@ export class LoginComponent {
 
     this.authService.login(username, password).subscribe({
       next: () => {
+        this.isLoading = false;
         // Get return URL from route parameters or default to home
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.router.navigate([returnUrl]);
