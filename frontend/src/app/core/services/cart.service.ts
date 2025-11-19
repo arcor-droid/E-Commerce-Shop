@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface CartItem {
   id: number;
@@ -35,7 +36,8 @@ export interface UpdateCartItemRequest {
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = 'http://localhost:8000/cart';
+  private readonly API_URL = environment.apiUrl;
+  private readonly cartEndpoint = `${this.API_URL}/cart`;
   
   // BehaviorSubject to manage cart state
   private cartSubject = new BehaviorSubject<CartSummary>({
@@ -59,7 +61,7 @@ export class CartService {
    * Load the user's cart from the backend
    */
   private loadCart(): void {
-    this.http.get<CartSummary>(this.apiUrl).subscribe({
+  this.http.get<CartSummary>(this.cartEndpoint).subscribe({
       next: (cart) => {
         this.cartSubject.next(cart);
       },
@@ -79,7 +81,7 @@ export class CartService {
    * Get the current cart (returns Observable)
    */
   getCart(): Observable<CartSummary> {
-    return this.http.get<CartSummary>(this.apiUrl).pipe(
+  return this.http.get<CartSummary>(this.cartEndpoint).pipe(
       tap((cart) => this.cartSubject.next(cart))
     );
   }
@@ -101,7 +103,7 @@ export class CartService {
       selected_options: selectedOptions
     };
 
-    return this.http.post<CartItem>(`${this.apiUrl}/items`, request).pipe(
+  return this.http.post<CartItem>(`${this.cartEndpoint}/items`, request).pipe(
       tap(() => {
         // Reload cart after adding item
         this.loadCart();
@@ -118,7 +120,7 @@ export class CartService {
       selected_options: selectedOptions
     };
 
-    return this.http.put<CartItem>(`${this.apiUrl}/items/${cartItemId}`, request).pipe(
+  return this.http.put<CartItem>(`${this.cartEndpoint}/items/${cartItemId}`, request).pipe(
       tap(() => {
         // Reload cart after updating item
         this.loadCart();
@@ -130,7 +132,7 @@ export class CartService {
    * Remove an item from the cart
    */
   removeCartItem(cartItemId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/items/${cartItemId}`).pipe(
+  return this.http.delete<void>(`${this.cartEndpoint}/items/${cartItemId}`).pipe(
       tap(() => {
         // Reload cart after removing item
         this.loadCart();
@@ -142,7 +144,7 @@ export class CartService {
    * Clear all items from the cart
    */
   clearCart(): Observable<void> {
-    return this.http.delete<void>(this.apiUrl).pipe(
+  return this.http.delete<void>(this.cartEndpoint).pipe(
       tap(() => {
         // Reset cart state
         this.cartSubject.next({

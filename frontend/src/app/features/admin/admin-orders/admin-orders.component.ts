@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrderService, AdminOrder } from '../../../core/services/order.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-admin-orders',
@@ -42,6 +43,8 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
     private orderService: OrderService,
     private router: Router
   ) {}
+
+  private readonly assetBaseUrl = environment.assetFallbackBaseUrl || environment.apiUrl;
 
   ngOnInit(): void {
     this.loadOrders();
@@ -219,5 +222,16 @@ export class AdminOrdersComponent implements OnInit, OnDestroy {
 
   formatPrice(price: number): string {
     return `€${price.toFixed(2)}`;
+  }
+
+  getProductImageUrl(imagePath: string | null): string {
+    if (imagePath) {
+      if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
+      }
+      const normalizedBase = this.assetBaseUrl.replace(/\/$/, '');
+      return `${normalizedBase}${imagePath}`;
+    }
+    return 'https://via.placeholder.com/80';
   }
 }

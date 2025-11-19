@@ -5,6 +5,7 @@ import { CartService, CartSummary, CartItem } from '../../core/services/cart.ser
 import { OrderService } from '../../core/services/order.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -21,6 +22,7 @@ export class CartComponent implements OnInit, OnDestroy {
   loading = true;
   error = '';
   checkoutLoading = false;
+  private readonly assetBaseUrl = environment.assetFallbackBaseUrl || environment.apiUrl;
   
   private cartSubscription?: Subscription;
 
@@ -160,6 +162,19 @@ export class CartComponent implements OnInit, OnDestroy {
     return Object.entries(options)
       .map(([key, value]) => `${key}: ${value}`)
       .join(', ');
+  }
+
+  getProductImageUrl(product: CartItem['product']): string {
+    const image = product?.image;
+    if (image) {
+      if (typeof image === 'string' && (image.startsWith('http://') || image.startsWith('https://'))) {
+        return image;
+      }
+      const normalizedBase = this.assetBaseUrl.replace(/\/$/, '');
+      return `${normalizedBase}${image}`;
+    }
+
+    return `https://placehold.co/150x150/4f46e5/white?text=${encodeURIComponent(product?.title?.substring(0, 15) || 'Product')}`;
   }
 
   /**

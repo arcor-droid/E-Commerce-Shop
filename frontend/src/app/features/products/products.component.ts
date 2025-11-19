@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Product, ProductCategory } from '../../core/models/product.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-products',
@@ -15,6 +16,7 @@ import { Product, ProductCategory } from '../../core/models/product.model';
 export class ProductsComponent implements OnInit {
   private readonly productService = inject(ProductService);
   readonly authService = inject(AuthService);
+  private readonly assetBaseUrl = environment.assetFallbackBaseUrl || environment.apiUrl;
 
   products: Product[] = [];
   categories: ProductCategory[] = [];
@@ -78,7 +80,8 @@ export class ProductsComponent implements OnInit {
         return product.image;
       }
       // Otherwise, prepend backend URL
-      return `http://localhost:8000${product.image}`;
+      const normalizedBase = this.assetBaseUrl.replace(/\/$/, '');
+      return `${normalizedBase}${product.image}`;
     }
     
     // Fallback to placeholder

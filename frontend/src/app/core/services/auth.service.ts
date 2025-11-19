@@ -11,6 +11,7 @@ import {
   PasswordChangeRequest
 } from '../models/user.model';
 import { CartService } from './cart.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly cartService = inject(CartService); // Direct injection - no circular dependency
   
-  private readonly API_URL = 'http://localhost:8000';
+  private readonly API_URL = environment.apiUrl;
   private readonly TOKEN_KEY = 'access_token';
   
   private currentUserSubject = new BehaviorSubject<User | null>(null);

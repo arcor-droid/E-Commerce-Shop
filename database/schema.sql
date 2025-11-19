@@ -189,30 +189,30 @@ INSERT INTO Users (email, nickname, password_hash, role, street_address, city, p
 
 -- Create product categories
 INSERT INTO ProductCategories (name, title, image, display_order) VALUES
-('hoodies', 'Hoodies', '/images/categories/hoodies.jpg', 1),
-('shirts', 'Shirts', '/images/categories/shirts.jpg', 2),
-('joggers', 'Joggers', '/images/categories/joggers.jpg', 3),
-('posters', 'Posters', '/images/categories/posters.jpg', 4),
-('schnick-schnack', 'Schnick Schnack', '/images/categories/misc.jpg', 5);
+('hoodies', 'Hoodies', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80', 1),
+('shirts', 'Shirts', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=900&q=80', 2),
+('joggers', 'Joggers', 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=900&q=80', 3),
+('posters', 'Posters', 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?auto=format&fit=crop&w=900&q=80', 4),
+('schnick-schnack', 'Schnick Schnack', 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=900&q=80', 5);
 
 -- Create sample products
 INSERT INTO Products (category_id, title, description, image, base_price, options, stock_quantity) VALUES
 -- Hoodies
-(1, 'Classic Black Hoodie', 'Comfortable black hoodie with front pocket', '/images/products/hoodie-black.jpg', 49.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["black"]}', 50),
-(1, 'Grey Zip Hoodie', 'Premium grey zip-up hoodie', '/images/products/hoodie-grey.jpg', 59.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["grey"]}', 30),
+(1, 'Classic Black Hoodie', 'Comfortable black hoodie with front pocket', 'https://images.unsplash.com/photo-1614214191247-5b2d3a734f1b?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 49.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["black"]}', 50),
+(1, 'Grey Zip Hoodie', 'Premium grey zip-up hoodie', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG9vZGllfGVufDB8fDB8fHww', 59.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["grey"]}', 30),
 
 -- Shirts
-(2, 'White Cotton T-Shirt', 'Classic white cotton t-shirt', '/images/products/shirt-white.jpg', 19.99, '{"sizes": ["S", "M", "L", "XL", "XXL"], "colors": ["white"]}', 100),
-(2, 'Graphic Print Shirt', 'Cool graphic design t-shirt', '/images/products/shirt-graphic.jpg', 24.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["black", "navy", "white"]}', 75),
+(2, 'White Cotton T-Shirt', 'Classic white cotton t-shirt', 'https://images.unsplash.com/photo-1622445275463-afa2ab738c34?auto=format&fit=crop&w=800&q=80', 19.99, '{"sizes": ["S", "M", "L", "XL", "XXL"], "colors": ["white"]}', 100),
+(2, 'Graphic Print Shirt', 'Cool graphic design t-shirt', 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=800&q=80', 24.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["black", "navy", "white"]}', 75),
 
 -- Joggers
-(3, 'Comfort Joggers Black', 'Soft and comfortable joggers', '/images/products/joggers-black.jpg', 39.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["black"]}', 40),
-(3, 'Sport Joggers Grey', 'Athletic joggers for active lifestyle', '/images/products/joggers-grey.jpg', 44.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["grey", "navy"]}', 35),
+(3, 'Comfort Joggers Black', 'Soft and comfortable joggers', 'https://images.unsplash.com/photo-1542818212-9899bafcb9db?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNvbWZvcnQlMjBqb2dnZXJzJTIwYmxhY2t8ZW58MHx8MHx8fDA%3D', 39.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["black"]}', 40),
+(3, 'Sport Joggers Grey', 'Athletic joggers for active lifestyle', 'https://images.unsplash.com/photo-1723972405511-e3785a045721?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHNwb3J0JTIwam9nZ2VycyUyMGdyZXl8ZW58MHx8MHx8fDA%3D', 44.99, '{"sizes": ["S", "M", "L", "XL"], "colors": ["grey", "navy"]}', 35),
 
 -- Posters
-(4, 'Motivational Poster A2', 'Inspirational quote poster', '/images/products/poster-motivation.jpg', 12.99, '{"sizes": ["A2", "A3"]}', 200),
-(4, 'Abstract Art Poster', 'Modern abstract art print', '/images/products/poster-abstract.jpg', 15.99, '{"sizes": ["A1", "A2", "A3"]}', 150),
+(4, 'Motivational Poster A2', 'Inspirational quote poster', 'https://images.unsplash.com/photo-1504805572947-34fad45aed93?auto=format&fit=crop&w=800&q=80', 12.99, '{"sizes": ["A2", "A3"]}', 200),
+(4, 'Abstract Art Poster', 'Modern abstract art print', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=800&q=80', 15.99, '{"sizes": ["A1", "A2", "A3"]}', 150),
 
 -- Schnick Schnack (Misc)
-(5, 'Branded Sticker Pack', 'Pack of 10 assorted stickers', '/images/products/stickers.jpg', 4.99, '{}', 500),
-(5, 'Coffee Mug', 'Ceramic coffee mug with logo', '/images/products/mug.jpg', 9.99, '{"colors": ["black", "white"]}', 80);
+(5, 'Branded Sticker Pack', 'Pack of 10 assorted stickers', 'https://plus.unsplash.com/premium_photo-1752230474021-5749c334925a?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnJhbmRlZCUyMHN0aWNrZXIlMjBwYWNrfGVufDB8fDB8fHww', 4.99, '{}', 500),
+(5, 'Coffee Mug', 'Ceramic coffee mug with logo', 'https://images.unsplash.com/photo-1572119865084-43c285814d63?auto=format&fit=crop&w=800&q=80', 9.99, '{"colors": ["black", "white"]}', 80);

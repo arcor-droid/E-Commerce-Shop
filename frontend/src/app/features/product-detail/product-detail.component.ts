@@ -6,6 +6,7 @@ import { ProductService } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { Product } from '../../core/models/product.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,6 +20,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   readonly authService = inject(AuthService);
+  private readonly assetBaseUrl = environment.assetFallbackBaseUrl || environment.apiUrl;
 
   product: Product | null = null;
   isLoading = false;
@@ -146,7 +148,8 @@ export class ProductDetailComponent implements OnInit {
       if (product.image.startsWith('http://') || product.image.startsWith('https://')) {
         return product.image;
       }
-      return `http://localhost:8000${product.image}`;
+      const normalizedBase = this.assetBaseUrl.replace(/\/$/, '');
+      return `${normalizedBase}${product.image}`;
     }
     return `https://placehold.co/600x600/4f46e5/white?text=${encodeURIComponent(product.title.substring(0, 20))}`;
   }

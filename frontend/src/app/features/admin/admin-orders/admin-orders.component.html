@@ -152,7 +152,7 @@
                             <div class="order-item">
                               @if (item.product_image) {
                                 <img 
-                                  [src]="'http://localhost:8000' + item.product_image" 
+                                  [src]="getProductImageUrl(item.product_image)" 
                                   [alt]="item.product_title"
                                   class="item-image"
                                 >

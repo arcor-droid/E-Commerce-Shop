@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OrderService, Order } from '../../core/services/order.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-order-detail',
@@ -20,6 +21,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   private orderId: number | null = null;
   private refreshInterval: any;
   private readonly REFRESH_INTERVAL_MS = 15000; // 15 seconds
+  private readonly assetBaseUrl = environment.assetFallbackBaseUrl || environment.apiUrl;
 
   constructor(
     private route: ActivatedRoute,
@@ -138,5 +140,16 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   continueShopping(): void {
     this.router.navigate(['/products']);
+  }
+
+  getProductImageUrl(imagePath: string | null): string {
+    if (imagePath) {
+      if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
+      }
+      const normalizedBase = this.assetBaseUrl.replace(/\/$/, '');
+      return `${normalizedBase}${imagePath}`;
+    }
+    return 'https://via.placeholder.com/100';
   }
 }

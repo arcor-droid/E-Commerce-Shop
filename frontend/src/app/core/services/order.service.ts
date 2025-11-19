@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface OrderItem {
   id: number;
@@ -45,7 +46,8 @@ export interface CheckoutResponse {
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:8000/orders';
+  private readonly API_URL = environment.apiUrl;
+  private readonly ordersEndpoint = `${this.API_URL}/orders`;
 
   constructor(private http: HttpClient) {}
 
@@ -53,21 +55,21 @@ export class OrderService {
    * Checkout - convert cart to order
    */
   checkout(): Observable<CheckoutResponse> {
-    return this.http.post<CheckoutResponse>(`${this.apiUrl}/checkout`, {});
+  return this.http.post<CheckoutResponse>(`${this.ordersEndpoint}/checkout`, {});
   }
 
   /**
    * Get all orders for the current user
    */
   getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.apiUrl);
+  return this.http.get<Order[]>(this.ordersEndpoint);
   }
 
   /**
    * Get a specific order by ID
    */
   getOrder(orderId: number): Observable<Order> {
-    return this.http.get<Order>(`${this.apiUrl}/${orderId}`);
+  return this.http.get<Order>(`${this.ordersEndpoint}/${orderId}`);
   }
 
   // Admin methods
@@ -76,20 +78,20 @@ export class OrderService {
    * Get all orders (admin only)
    */
   getAllOrders(): Observable<AdminOrder[]> {
-    return this.http.get<AdminOrder[]>(`${this.apiUrl}/admin/all`);
+  return this.http.get<AdminOrder[]>(`${this.ordersEndpoint}/admin/all`);
   }
 
   /**
    * Get a specific order with user details (admin only)
    */
   getAdminOrder(orderId: number): Observable<AdminOrder> {
-    return this.http.get<AdminOrder>(`${this.apiUrl}/admin/${orderId}`);
+  return this.http.get<AdminOrder>(`${this.ordersEndpoint}/admin/${orderId}`);
   }
 
   /**
    * Update order status (admin only)
    */
   updateOrderStatus(orderId: number, update: OrderStatusUpdate): Observable<AdminOrder> {
-    return this.http.put<AdminOrder>(`${this.apiUrl}/admin/${orderId}/status`, update);
+  return this.http.put<AdminOrder>(`${this.ordersEndpoint}/admin/${orderId}/status`, update);
   }
 }
