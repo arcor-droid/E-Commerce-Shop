@@ -1,12 +1,12 @@
 <div class="products-container">
   <div class="header">
-      <h1>Products</h1>
-      @if (authService.isAdmin()) {
-        <a routerLink="/admin/products/new" class="btn btn-primary">Add Product</a>
-      }
-    </div>
+    <h1>Products</h1>
+    @if (authService.isAdmin()) {
+      <a routerLink="/admin/products/new" class="btn btn-primary">Add Product</a>
+    }
+  </div>
 
-    <!-- Category Filter -->
+  <!-- Category Filter -->
     <div class="category-filter">
       <button 
         class="category-btn" 
@@ -84,14 +84,13 @@
       </div>
     }
 
-    <!-- Empty State -->
-    @if (!isLoading && products.length === 0) {
-      <div class="empty-state">
-        <p>No products found.</p>
-        @if (authService.isAdmin()) {
-          <a routerLink="/admin/products/new" class="btn btn-primary">Add First Product</a>
-        }
-      </div>
-    }
-  </div>
+  <!-- Empty State -->
+  @if (!isLoading && products.length === 0) {
+    <div class="empty-state">
+      <p>No products found.</p>
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin/products/new" class="btn btn-primary">Add First Product</a>
+      }
+    </div>
+  }
 </div>
