@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DECIMAL, Boolean, Enum, TIMESTAMP, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Text, DECIMAL, Boolean, Enum, TIMESTAMP, ForeignKey, JSON, LargeBinary
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from database import Base
@@ -74,7 +74,9 @@ class Product(Base):
     category_id = Column(Integer, ForeignKey("ProductCategories.id", ondelete="CASCADE"), nullable=False)
     title = Column(String(255), nullable=False, index=True)
     description = Column(Text, nullable=True)
-    image = Column(String(500), nullable=True)
+    image = Column(String(500), nullable=True)  # URL or external image reference
+    image_data = Column(LargeBinary, nullable=True)  # Binary image data stored in DB
+    image_mime_type = Column(String(50), nullable=True)  # e.g., 'image/jpeg', 'image/png'
     base_price = Column(DECIMAL(10, 2), nullable=False)
     
     # Options stored as JSON (e.g., {"sizes": ["S", "M", "L"], "colors": ["red", "blue"]})

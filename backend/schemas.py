@@ -148,6 +148,8 @@ class ProductCreate(BaseModel):
     description: Optional[str] = None
     base_price: float = Field(..., gt=0, description="Base price must be greater than 0")
     image: Optional[str] = Field(None, max_length=500)
+    image_data_hex: Optional[str] = None  # Hex-encoded binary data
+    image_mime_type: Optional[str] = None  # MIME type of the image
     options: Optional[Dict[str, Any]] = Field(default_factory=dict)
     stock_quantity: int = Field(default=0, ge=0)
     is_active: bool = Field(default=True)
@@ -160,6 +162,8 @@ class ProductUpdate(BaseModel):
     description: Optional[str] = None
     base_price: Optional[float] = Field(None, gt=0)
     image: Optional[str] = Field(None, max_length=500)
+    image_data_hex: Optional[str] = None  # Hex-encoded binary data
+    image_mime_type: Optional[str] = None  # MIME type of the image
     options: Optional[Dict[str, Any]] = None
     stock_quantity: Optional[int] = Field(None, ge=0)
     is_active: Optional[bool] = None
@@ -179,6 +183,9 @@ class ProductResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    
+    class Config:
+        from_attributes = True
     
     class Config:
         from_attributes = True

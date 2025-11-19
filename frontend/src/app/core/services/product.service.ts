@@ -62,4 +62,29 @@ export class ProductService {
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/products/${id}`);
   }
+
+  /**
+   * Upload a product image (admin only)
+   */
+  uploadProductImage(file: File): Observable<{ 
+    image_id: string;
+    image_data: string; 
+    mime_type: string; 
+    size: number; 
+    filename: string 
+  }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return this.http.post<{ 
+      image_id: string;
+      image_data: string; 
+      mime_type: string; 
+      size: number; 
+      filename: string 
+    }>(
+      `${this.API_URL}/products/upload-image`,
+      formData
+    );
+  }
 }

@@ -28,6 +28,7 @@ export class ProductFormComponent implements OnInit {
   successMessage = '';
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  uploadedImageData: { image_data: string; mime_type: string } | null = null;
 
   ngOnInit(): void {
     // Check if user is admin
@@ -126,6 +127,8 @@ export class ProductFormComponent implements OnInit {
       description: formValue.description || undefined,
       base_price: formValue.base_price,
       image: formValue.image || undefined,
+      image_data_hex: this.uploadedImageData?.image_data || undefined,
+      image_mime_type: this.uploadedImageData?.mime_type || undefined,
       stock_quantity: formValue.stock_quantity,
       is_active: formValue.is_active,
       options: Object.keys(options).length > 0 ? options : undefined
@@ -179,6 +182,21 @@ export class ProductFormComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
       
+      // Validate file size (5MB max)
+      const maxSize = 5 * 1024 * 1024;
+      if (this.selectedFile.size > maxSize) {
+        this.errorMessage = 'File size must not exceed 5MB';
+        this.selectedFile = null;
+        return;
+      }
+      
+      // Validate file type
+      if (!this.selectedFile.type.startsWith('image/')) {
+        this.errorMessage = 'File must be an image';
+        this.selectedFile = null;
+        return;
+      }
+      
       // Create preview
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
@@ -186,15 +204,42 @@ export class ProductFormComponent implements OnInit {
       };
       reader.readAsDataURL(this.selectedFile);
       
-      // For now, we'll use a placeholder URL since we don't have backend upload
-      // In a real implementation, you would upload to a service like Cloudinary, S3, etc.
-      this.errorMessage = 'Note: File selected. For now, please use an image URL from Unsplash or another CDN.';
+      // Upload to backend
+      this.isLoading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+      
+      this.productService.uploadProductImage(this.selectedFile).subscribe({
+        next: (response) => {
+          // Store the uploaded image data for later use when saving the product
+          this.uploadedImageData = {
+            image_data: response.image_data,
+            mime_type: response.mime_type
+          };
+          
+          this.successMessage = `Image uploaded successfully! (${(response.size / 1024).toFixed(1)}KB)`;
+          this.isLoading = false;
+          
+          // Clear success message after 3 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.detail || 'Failed to upload image';
+          this.selectedFile = null;
+          this.imagePreview = null;
+          this.isLoading = false;
+          console.error('Failed to upload image:', error);
+        }
+      });
     }
   }
 
   clearImage(): void {
     this.selectedFile = null;
     this.imagePreview = null;
+    this.uploadedImageData = null;
     this.productForm.patchValue({ image: '' });
   }
 }
