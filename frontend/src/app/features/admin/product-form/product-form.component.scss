@@ -1,110 +1,47 @@
 .product-form-container {
   min-height: 100vh;
-  background: #f5f5f5;
-}
-
-.navbar {
-  background: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.nav-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #4f46e5;
-  
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.nav-link {
-  color: #64748b;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-
-  &:hover {
-    color: #4f46e5;
-  }
+  background: var(--color-gray-50);
 }
 
 .main-content {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--spacing-md);
 }
 
 .form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-md);
 
   h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
     margin: 0;
   }
 }
 
-.alert {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.alert-success {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
-}
-
-.alert-error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
-
 .loading {
   text-align: center;
-  padding: 3rem;
-  color: #64748b;
-  font-size: 1.125rem;
+  padding: var(--spacing-xl);
+  color: var(--color-gray-600);
+  font-size: 1rem;
 }
 
 .product-form {
   background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -114,7 +51,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 
   &.full-width {
     grid-column: 1 / -1;
@@ -127,31 +64,31 @@
 
 label {
   font-weight: 600;
-  color: #475569;
+  color: var(--color-gray-700);
   font-size: 0.875rem;
 
   &.required::after {
     content: ' *';
-    color: #dc2626;
+    color: var(--color-danger);
   }
 }
 
 .form-control {
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
   transition: border-color 0.2s;
 
   &:focus {
     outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 
   &.code {
     font-family: 'Monaco', 'Courier New', monospace;
-    font-size: 0.875rem;
+    font-size: 0.813rem;
   }
 }
 
@@ -161,110 +98,70 @@ select.form-control {
 
 textarea.form-control {
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
 }
 
 .error-message {
-  color: #dc2626;
-  font-size: 0.813rem;
-  margin-top: -0.25rem;
+  color: var(--color-danger);
+  font-size: 0.75rem;
+  margin-top: -0.2rem;
 }
 
 .help-text {
-  color: #64748b;
-  font-size: 0.813rem;
-  margin-top: -0.25rem;
+  color: var(--color-gray-600);
+  font-size: 0.75rem;
+  margin-top: -0.2rem;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
   cursor: pointer;
   font-weight: normal;
 
   input[type="checkbox"] {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
     cursor: pointer;
   }
 
   span {
-    color: #1e293b;
+    color: var(--color-gray-900);
   }
 }
 
 .form-actions {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-sm);
   justify-content: flex-end;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &.btn-primary {
-    background: #4f46e5;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #4338ca;
-    }
-  }
-
-  &.btn-secondary {
-    background: #e2e8f0;
-    color: #475569;
-
-    &:hover {
-      background: #cbd5e1;
-    }
-  }
-
-  &.btn-small {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-  }
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-gray-200);
 }
 
 .btn-icon {
   background: none;
   border: none;
-  color: #dc2626;
+  color: var(--color-danger);
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  font-size: 1.25rem;
+  padding: var(--spacing-xs);
+  font-size: 1.125rem;
   transition: color 0.2s;
 
   &:hover {
-    color: #991b1b;
+    color: var(--color-danger-dark);
   }
 }
 
 .file-upload-section {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  padding: 0.75rem;
-  background: #f8fafc;
-  border: 1px dashed #cbd5e1;
-  border-radius: 6px;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--color-gray-50);
+  border: 1px dashed var(--color-gray-300);
+  border-radius: var(--radius-md);
 }
 
 .file-upload-label {
@@ -277,8 +174,8 @@ textarea.form-control {
 }
 
 .file-name {
-  color: #475569;
-  font-size: 0.875rem;
+  color: var(--color-gray-700);
+  font-size: 0.813rem;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -286,18 +183,18 @@ textarea.form-control {
 }
 
 .image-preview {
-  margin-top: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  margin-top: var(--spacing-sm);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  max-width: 400px;
+  max-width: 350px;
 
   img {
     width: 100%;
     height: auto;
     display: block;
-    max-height: 300px;
+    max-height: 250px;
     object-fit: contain;
-    background: #f8fafc;
+    background: var(--color-gray-50);
   }
 }

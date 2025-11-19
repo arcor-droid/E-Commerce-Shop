@@ -1,107 +1,67 @@
 .profile-container {
   min-height: 100vh;
-  background: #f5f7fa;
-}
-
-.navbar {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
-
-  .nav-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-
-    a {
-      color: #667eea;
-      text-decoration: none;
-    }
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .nav-link {
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-
-    &:hover {
-      color: #667eea;
-    }
-  }
+  background: var(--color-gray-100);
 }
 
 .main-content {
   max-width: 800px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: var(--spacing-md);
 }
 
 .profile-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
 
   > h1 {
-    margin: 0 0 2rem 0;
-    font-size: 2rem;
-    color: #333;
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: 1.5rem;
+    color: var(--color-gray-900);
+    font-weight: 700;
   }
 }
 
 .user-badge {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  margin-bottom: 2rem;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-md);
 
   .badge-icon {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: white;
-    color: #667eea;
+    color: var(--color-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
+    flex-shrink: 0;
   }
 
   .badge-info {
     h2 {
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 var(--spacing-xs) 0;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.125rem;
+      font-weight: 700;
     }
 
     .role-badge {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
+      padding: 0.125rem var(--spacing-sm);
       background: rgba(255, 255, 255, 0.2);
       color: white;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
       text-transform: capitalize;
 
       &.admin {
@@ -112,48 +72,50 @@
 }
 
 .form-section {
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--spacing-lg);
 
   h3 {
-    margin: 0 0 1.5rem 0;
-    font-size: 1.25rem;
-    color: #333;
-    border-bottom: 2px solid #e1e8ed;
-    padding-bottom: 0.5rem;
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: 1rem;
+    color: var(--color-gray-900);
+    border-bottom: 2px solid var(--color-gray-200);
+    padding-bottom: var(--spacing-xs);
+    font-weight: 700;
   }
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-md);
 
   label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-xs);
     font-weight: 600;
-    color: #555;
-    font-size: 0.9rem;
+    color: var(--color-gray-700);
+    font-size: 0.813rem;
   }
 
   input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e1e8ed;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
     box-sizing: border-box;
 
     &:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
     }
 
     &.invalid {
-      border-color: #e74c3c;
+      border-color: var(--color-danger);
     }
 
     &::placeholder {
-      color: #aaa;
+      color: var(--color-gray-400);
     }
   }
 }
@@ -161,13 +123,13 @@
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .error-text {
-  color: #e74c3c;
-  font-size: 0.85rem;
-  margin-top: 0.4rem;
+  color: var(--color-danger);
+  font-size: 0.75rem;
+  margin-top: var(--spacing-xs);
 
   span {
     display: block;
@@ -175,41 +137,41 @@
 }
 
 .alert {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.813rem;
 
   &.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #d1fae5;
+    color: var(--color-secondary-dark);
+    border: 1px solid #a7f3d0;
   }
 
   &.alert-error {
-    background-color: #fee;
-    color: #c33;
-    border: 1px solid #fcc;
+    background-color: #fee2e2;
+    color: var(--color-danger-dark);
+    border: 1px solid #fecaca;
   }
 }
 
 .btn {
-  padding: 0.875rem 2rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 
   &.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
     color: white;
     width: 100%;
 
     &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
 
     &:disabled {
@@ -220,11 +182,11 @@
 
   &.btn-secondary {
     background: white;
-    color: #667eea;
-    border: 2px solid #667eea;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
 
     &:hover {
-      background: #f8f9fa;
+      background: var(--color-gray-100);
     }
   }
 }
@@ -239,3 +201,4 @@
     text-align: center;
   }
 }
+
