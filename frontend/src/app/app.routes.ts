@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
 import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
@@ -42,22 +41,12 @@ export const routes: Routes = [
   {
     path: 'admin/products/new',
     loadComponent: () => import('./features/admin/product-form/product-form.component').then(m => m.ProductFormComponent),
-    canActivate: [authGuard, adminGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'admin/products/:id/edit',
     loadComponent: () => import('./features/admin/product-form/product-form.component').then(m => m.ProductFormComponent),
-    canActivate: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/orders',
-    loadComponent: () => import('./features/admin/admin-orders/admin-orders.component').then(m => m.AdminOrdersComponent),
-    canActivate: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/orders/:id',
-    loadComponent: () => import('./features/admin/admin-order-detail/admin-order-detail.component').then(m => m.AdminOrderDetailComponent),
-    canActivate: [authGuard, adminGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'profile',

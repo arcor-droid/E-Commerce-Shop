@@ -18,16 +18,10 @@
         <a routerLink="/orders" class="nav-link" routerLinkActive="active">📦 Orders</a>
         
         <!-- Admin Links -->
-        @if (isAdmin) {
-          <div class="admin-menu">
-            <span class="admin-label">Admin:</span>
-            <a routerLink="/admin/products/new" class="nav-link admin-link" routerLinkActive="active">
-              ➕ Products
-            </a>
-            <a routerLink="/admin/orders" class="nav-link admin-link" routerLinkActive="active">
-              📋 Orders
-            </a>
-          </div>
+        @if (authService.isAdmin()) {
+          <a routerLink="/admin/products/new" class="nav-link admin-link" routerLinkActive="active">
+            ➕ New Product
+          </a>
         }
         
         <span class="user-info">

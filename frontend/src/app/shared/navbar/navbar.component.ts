@@ -29,11 +29,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.cartSubscription?.unsubscribe();
   }
 
-  get isAdmin(): boolean {
-    const user = this.authService.getCurrentUser();
-    return user?.role === 'admin';
-  }
-
   logout(): void {
     this.authService.logout();
   }
