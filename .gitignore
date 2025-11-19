@@ -49,3 +49,6 @@ mysql-data/
 # Nix
 result
 .direnv/
+
+# random
+combined_document.md

@@ -6,6 +6,14 @@
   .admin-header {
     margin-bottom: 2rem;
 
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
@@ -15,6 +23,75 @@
     .subtitle {
       color: #666;
       font-size: 1rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .btn-auto-refresh {
+        padding: 0.625rem 1.25rem;
+        border: 2px solid #6c757d;
+        background: white;
+        color: #6c757d;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #f8f9fa;
+        }
+
+        &.active {
+          background: #28a745;
+          color: white;
+          border-color: #28a745;
+          animation: pulse 2s infinite;
+
+          &:hover {
+            background: #218838;
+            border-color: #218838;
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+      }
+
+      .last-updated {
+        font-size: 0.875rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      .new-orders-badge {
+        padding: 0.625rem 1.25rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        animation: bounce 1s infinite;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: scale(1.05);
+          animation: none;
+        }
+
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
+      }
     }
   }
 
@@ -140,10 +217,25 @@
     tbody {
       tr {
         border-bottom: 1px solid #e9ecef;
-        transition: background-color 0.2s;
+        transition: all 0.3s;
 
         &:hover {
           background: #f8f9fa;
+        }
+
+        &.order-highlight {
+          background: linear-gradient(90deg, #fff9e6 0%, #ffffff 100%);
+          animation: highlightFade 2s ease-in-out;
+          border-left: 4px solid #ffc107;
+
+          @keyframes highlightFade {
+            0% {
+              background: linear-gradient(90deg, #ffd700 0%, #fff9e6 100%);
+            }
+            100% {
+              background: linear-gradient(90deg, #fff9e6 0%, #ffffff 100%);
+            }
+          }
         }
 
         td {
@@ -155,6 +247,18 @@
           font-weight: 600;
           color: #007bff;
           font-size: 1rem;
+          position: relative;
+
+          .new-indicator {
+            margin-left: 0.5rem;
+            font-size: 1.25rem;
+            animation: sparkle 1.5s infinite;
+
+            @keyframes sparkle {
+              0%, 100% { opacity: 1; transform: scale(1); }
+              50% { opacity: 0.5; transform: scale(1.2); }
+            }
+          }
         }
 
         .customer-info {

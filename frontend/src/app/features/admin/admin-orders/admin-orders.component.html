@@ -1,7 +1,30 @@
 <div class="admin-orders-container">
   <div class="admin-header">
-    <h1>Order Management</h1>
-    <p class="subtitle">Manage and track customer orders</p>
+    <div class="header-content">
+      <div>
+        <h1>Order Management</h1>
+        <p class="subtitle">Manage and track customer orders</p>
+      </div>
+      <div class="header-actions">
+        <button 
+          (click)="toggleAutoRefresh()" 
+          class="btn-auto-refresh"
+          [class.active]="autoRefreshEnabled"
+          title="{{ autoRefreshEnabled ? 'Pause' : 'Resume' }} auto-refresh">
+          {{ autoRefreshEnabled ? '⏸ Pause Updates' : '▶ Resume Updates' }}
+        </button>
+        @if (lastUpdated) {
+          <span class="last-updated">
+            Last updated: {{ lastUpdated | date:'short' }}
+          </span>
+        }
+        @if (newOrdersCount > 0 && autoRefreshEnabled) {
+          <span class="new-orders-badge" (click)="newOrdersCount = 0; changedOrderIds.clear()">
+            🆕 {{ newOrdersCount }} new
+          </span>
+        }
+      </div>
+    </div>
   </div>
 
   <!-- Filters -->
@@ -75,8 +98,13 @@
           </thead>
           <tbody>
             @for (order of filteredOrders; track order.id) {
-              <tr>
-                <td class="order-id">#{{ order.id }}</td>
+              <tr [class.order-highlight]="changedOrderIds.has(order.id)">
+                <td class="order-id">
+                  #{{ order.id }}
+                  @if (changedOrderIds.has(order.id)) {
+                    <span class="new-indicator">✨</span>
+                  }
+                </td>
                 <td class="customer-info">
                   <div class="customer-name">{{ order.user_nickname }}</div>
                   <div class="customer-email">{{ order.user_email }}</div>

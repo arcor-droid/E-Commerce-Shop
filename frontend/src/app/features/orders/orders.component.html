@@ -1,6 +1,20 @@
 <div class="orders-container">
   <div class="orders-header">
     <h1>My Orders</h1>
+    <div class="header-actions">
+      <button 
+        (click)="toggleAutoRefresh()" 
+        [class.active]="autoRefreshEnabled"
+        class="btn-auto-refresh"
+        title="{{ autoRefreshEnabled ? 'Pause' : 'Resume' }} auto-refresh">
+        {{ autoRefreshEnabled ? '⏸ Pause' : '▶ Resume' }} Auto-Refresh
+      </button>
+      @if (lastUpdated) {
+        <span class="last-updated">
+          Last updated: {{ lastUpdated | date:'short' }}
+        </span>
+      }
+    </div>
   </div>
 
   <!-- Loading State -->

@@ -1,4 +1,27 @@
 <div class="order-detail-container">
+  <!-- Auto-refresh controls -->
+  @if (!loading && !error && order) {
+    <div class="refresh-controls">
+      <button 
+        (click)="toggleAutoRefresh()" 
+        [class.active]="autoRefreshEnabled"
+        class="btn-auto-refresh"
+        title="{{ autoRefreshEnabled ? 'Pause' : 'Resume' }} auto-refresh">
+        {{ autoRefreshEnabled ? '⏸ Pause' : '▶ Resume' }} Live Updates
+      </button>
+      @if (lastUpdated) {
+        <span class="last-updated">
+          Last updated: {{ lastUpdated | date:'short' }}
+        </span>
+      }
+      @if (statusChanged && previousStatus) {
+        <span class="status-change-alert">
+          Status changed: {{ previousStatus }} → {{ order.status }} 🎉
+        </span>
+      }
+    </div>
+  }
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading">
     <p>Loading order details...</p>
@@ -21,7 +44,7 @@
     </div>
 
     <!-- Order Info Card -->
-    <div class="order-info-card">
+    <div class="order-info-card" [class.status-changed]="statusChanged">
       <div class="order-header">
         <h2>Order #{{ order.id }}</h2>
         <span [class]="'status-badge ' + getStatusClass(order.status)">

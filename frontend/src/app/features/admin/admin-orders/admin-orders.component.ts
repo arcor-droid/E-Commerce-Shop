@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrderService, AdminOrder } from '../../../core/services/order.service';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './admin-orders.component.html',
   styleUrl: './admin-orders.component.scss'
 })
-export class AdminOrdersComponent implements OnInit {
+export class AdminOrdersComponent implements OnInit, OnDestroy {
   orders: AdminOrder[] = [];
   filteredOrders: AdminOrder[] = [];
   loading = true;
@@ -20,6 +20,13 @@ export class AdminOrdersComponent implements OnInit {
   // Filter options
   statusFilter = 'all';
   searchQuery = '';
+  
+  // Auto-refresh for live updates
+  autoRefreshEnabled = true;
+  lastUpdated: Date | null = null;
+  private refreshInterval: any = null;
+  newOrdersCount = 0;
+  changedOrderIds = new Set<number>();
   
   // Status options for dropdown
   statusOptions = [
@@ -38,24 +45,88 @@ export class AdminOrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
+    this.startAutoRefresh();
   }
 
-  loadOrders(): void {
-    this.loading = true;
+  ngOnDestroy(): void {
+    this.stopAutoRefresh();
+  }
+
+  startAutoRefresh(): void {
+    if (this.refreshInterval) {
+      return; // Already running
+    }
+    
+    this.refreshInterval = setInterval(() => {
+      if (this.autoRefreshEnabled) {
+        this.loadOrders(true); // Silent refresh
+      }
+    }, 15000); // 15 seconds for admin - faster for live demo!
+  }
+
+  stopAutoRefresh(): void {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+  }
+
+  toggleAutoRefresh(): void {
+    this.autoRefreshEnabled = !this.autoRefreshEnabled;
+    if (!this.autoRefreshEnabled) {
+      this.newOrdersCount = 0;
+      this.changedOrderIds.clear();
+    }
+  }
+
+  loadOrders(silent = false): void {
+    if (!silent) {
+      this.loading = true;
+    }
     this.error = null;
     
     this.orderService.getAllOrders().subscribe({
       next: (orders) => {
+        // Detect new orders and changes
+        this.checkForChanges(orders);
+        
         this.orders = orders.sort((a, b) => 
           new Date(b.order_date).getTime() - new Date(a.order_date).getTime()
         );
         this.applyFilters();
         this.loading = false;
+        this.lastUpdated = new Date();
       },
       error: (err) => {
         console.error('Error loading orders:', err);
         this.error = 'Failed to load orders. Please try again.';
         this.loading = false;
+      }
+    });
+  }
+
+  checkForChanges(newOrders: AdminOrder[]): void {
+    if (this.orders.length === 0) {
+      return; // First load, no comparison
+    }
+
+    // Check for new orders
+    const oldOrderIds = new Set(this.orders.map(o => o.id));
+    const newOrdersList = newOrders.filter(o => !oldOrderIds.has(o.id));
+    
+    if (newOrdersList.length > 0) {
+      this.newOrdersCount += newOrdersList.length;
+      newOrdersList.forEach(o => this.changedOrderIds.add(o.id));
+      console.log(`🆕 ${newOrdersList.length} new order(s) received!`, newOrdersList.map(o => `#${o.id}`));
+    }
+
+    // Check for status changes
+    const oldOrdersMap = new Map(this.orders.map(o => [o.id, o]));
+    newOrders.forEach(newOrder => {
+      const oldOrder = oldOrdersMap.get(newOrder.id);
+      if (oldOrder && oldOrder.status !== newOrder.status) {
+        this.changedOrderIds.add(newOrder.id);
+        console.log(`📝 Order #${newOrder.id} status changed: ${oldOrder.status} → ${newOrder.status}`);
       }
     });
   }

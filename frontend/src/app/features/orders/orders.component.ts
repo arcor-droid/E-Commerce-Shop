@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { OrderService, Order } from '../../core/services/order.service';
@@ -9,10 +9,14 @@ import { OrderService, Order } from '../../core/services/order.service';
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   loading = true;
   error = '';
+  autoRefreshEnabled = true;
+  lastUpdated: Date | null = null;
+  private refreshInterval: any;
+  private readonly REFRESH_INTERVAL_MS = 30000; // 30 seconds
 
   constructor(
     private orderService: OrderService,
@@ -21,23 +25,74 @@ export class OrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
+    this.startAutoRefresh();
   }
 
-  loadOrders(): void {
-    this.loading = true;
+  ngOnDestroy(): void {
+    this.stopAutoRefresh();
+  }
+
+  startAutoRefresh(): void {
+    this.stopAutoRefresh(); // Clear any existing interval
+    if (this.autoRefreshEnabled) {
+      this.refreshInterval = setInterval(() => {
+        this.loadOrders(true); // Silent refresh
+      }, this.REFRESH_INTERVAL_MS);
+    }
+  }
+
+  stopAutoRefresh(): void {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+  }
+
+  toggleAutoRefresh(): void {
+    this.autoRefreshEnabled = !this.autoRefreshEnabled;
+    if (this.autoRefreshEnabled) {
+      this.startAutoRefresh();
+      this.loadOrders(true);
+    } else {
+      this.stopAutoRefresh();
+    }
+  }
+
+  loadOrders(silent = false): void {
+    if (!silent) {
+      this.loading = true;
+    }
     this.error = '';
 
     this.orderService.getOrders().subscribe({
       next: (orders) => {
+        // Check for status changes
+        if (this.orders.length > 0) {
+          this.checkForStatusChanges(orders);
+        }
+        
         this.orders = orders.sort((a, b) => 
           new Date(b.order_date).getTime() - new Date(a.order_date).getTime()
         );
         this.loading = false;
+        this.lastUpdated = new Date();
       },
       error: (err) => {
         console.error('Error loading orders:', err);
-        this.error = err.error?.detail || 'Failed to load orders.';
+        if (!silent) {
+          this.error = err.error?.detail || 'Failed to load orders.';
+        }
         this.loading = false;
+      }
+    });
+  }
+
+  private checkForStatusChanges(newOrders: Order[]): void {
+    newOrders.forEach(newOrder => {
+      const oldOrder = this.orders.find(o => o.id === newOrder.id);
+      if (oldOrder && oldOrder.status !== newOrder.status) {
+        console.log(`Order #${newOrder.id} status changed: ${oldOrder.status} → ${newOrder.status}`);
+        // You could show a toast notification here
       }
     });
   }
