@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private cartService = inject(CartService);
   
   cartCount = 0;
+  mobileMenuOpen = false;
   private cartSubscription?: Subscription;
 
   ngOnInit(): void {
@@ -31,5 +32,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+    this.closeMobileMenu();
+  }
+  
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+  
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
   }
 }

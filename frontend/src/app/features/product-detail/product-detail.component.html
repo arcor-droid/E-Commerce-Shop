@@ -144,13 +144,13 @@
                   🗑️ Delete
                 </button>
               </div>
+              
+              <!-- Timestamps - Only for Admin -->
+              <div class="product-timestamps">
+                <small>Created {{ product.created_at | date:'short' }}</small>
+                <small>Updated {{ product.updated_at | date:'short' }}</small>
+              </div>
             }
-          </div>
-
-          <!-- Timestamps -->
-          <div class="product-timestamps">
-            <small>Created {{ product.created_at | date:'short' }}</small>
-            <small>Updated {{ product.updated_at | date:'short' }}</small>
           </div>
         </div>
       </div>

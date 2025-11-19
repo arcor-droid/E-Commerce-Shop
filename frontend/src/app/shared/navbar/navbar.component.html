@@ -1,9 +1,17 @@
 <nav class="navbar">
   <div class="nav-content">
     <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
-    <div class="nav-links">
-      <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-      <a routerLink="/products" class="nav-link" routerLinkActive="active">Products</a>
+    
+    <!-- Desktop Navigation -->
+    <div class="nav-links desktop-nav">
+      <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <span class="icon">🏠</span>
+        <span class="text">Home</span>
+      </a>
+      <a routerLink="/products" class="nav-link" routerLinkActive="active">
+        <span class="icon">🛍️</span>
+        <span class="text">Products</span>
+      </a>
       
       @if (authService.isAuthenticated$ | async) {
         <!-- Cart Link with Badge -->
@@ -12,30 +20,100 @@
           @if (cartCount > 0) {
             <span class="cart-badge">{{ cartCount }}</span>
           }
+          <span class="text">Cart</span>
         </a>
         
         <!-- Orders Link -->
-        <a routerLink="/orders" class="nav-link" routerLinkActive="active">📦 Orders</a>
+        <a routerLink="/orders" class="nav-link" routerLinkActive="active">
+          <span class="icon">📦</span>
+          <span class="text">Orders</span>
+        </a>
         
         <!-- Admin Links -->
         @if (authService.isAdmin()) {
           <a routerLink="/admin/products/new" class="nav-link admin-link" routerLinkActive="active">
-            ➕ New Product
+            <span class="icon">➕</span>
+            <span class="text">New Product</span>
           </a>
           <a routerLink="/admin/orders" class="nav-link admin-link" routerLinkActive="active">
-            📋 Manage Orders
+            <span class="icon">📋</span>
+            <span class="text">Manage Orders</span>
           </a>
         }
         
         <span class="user-info">
           Welcome, {{ (authService.currentUser$ | async)?.nickname }}!
         </span>
-        <a routerLink="/profile" class="nav-link" routerLinkActive="active">Profile</a>
+        <a routerLink="/profile" class="nav-link" routerLinkActive="active">
+          <span class="icon">👤</span>
+          <span class="text">Profile</span>
+        </a>
         <button (click)="logout()" class="btn btn-secondary">Logout</button>
       } @else {
-        <a routerLink="/login" class="nav-link" routerLinkActive="active">Login</a>
+        <a routerLink="/login" class="nav-link" routerLinkActive="active">
+          <span class="icon">🔐</span>
+          <span class="text">Login</span>
+        </a>
         <a routerLink="/register" class="btn btn-primary">Register</a>
       }
     </div>
+    
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [class.active]="mobileMenuOpen">
+      <span class="hamburger"></span>
+    </button>
+  </div>
+  
+  <!-- Mobile Backdrop -->
+  <div class="mobile-backdrop" [class.open]="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+  
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" [class.open]="mobileMenuOpen">
+    <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+      <span class="icon">🏠</span>
+      <span class="text">Home</span>
+    </a>
+    <a routerLink="/products" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+      <span class="icon">🛍️</span>
+      <span class="text">Products</span>
+    </a>
+    
+    @if (authService.isAuthenticated$ | async) {
+      <a routerLink="/cart" class="nav-link cart-link" routerLinkActive="active" (click)="closeMobileMenu()">
+        <span class="cart-icon">🛒</span>
+        @if (cartCount > 0) {
+          <span class="cart-badge">{{ cartCount }}</span>
+        }
+        <span class="text">Cart</span>
+      </a>
+      
+      <a routerLink="/orders" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+        <span class="icon">📦</span>
+        <span class="text">Orders</span>
+      </a>
+      
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin/products/new" class="nav-link admin-link" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="icon">➕</span>
+          <span class="text">New Product</span>
+        </a>
+        <a routerLink="/admin/orders" class="nav-link admin-link" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="icon">📋</span>
+          <span class="text">Manage Orders</span>
+        </a>
+      }
+      
+      <a routerLink="/profile" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+        <span class="icon">👤</span>
+        <span class="text">Profile</span>
+      </a>
+      <button (click)="logout()" class="btn btn-secondary full-width">Logout</button>
+    } @else {
+      <a routerLink="/login" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+        <span class="icon">🔐</span>
+        <span class="text">Login</span>
+      </a>
+      <a routerLink="/register" class="btn btn-primary full-width" (click)="closeMobileMenu()">Register</a>
+    }
   </div>
 </nav>
