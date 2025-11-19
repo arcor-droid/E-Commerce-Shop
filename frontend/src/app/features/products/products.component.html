@@ -1,21 +1,5 @@
 <div class="products-container">
-  <nav class="navbar">
-    <div class="nav-content">
-      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
-      <div class="nav-links">
-        <a routerLink="/" class="nav-link">Home</a>
-        @if (authService.isAuthenticated$ | async) {
-          <a routerLink="/profile" class="nav-link">Profile</a>
-          <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
-        } @else {
-          <a routerLink="/login" class="nav-link">Login</a>
-        }
-      </div>
-    </div>
-  </nav>
-
-  <main class="main-content">
-    <div class="header">
+  <div class="header">
       <h1>Products</h1>
       @if (authService.isAdmin()) {
         <a routerLink="/admin/products/new" class="btn btn-primary">Add Product</a>
@@ -109,5 +93,5 @@
         }
       </div>
     }
-  </main>
+  </div>
 </div>

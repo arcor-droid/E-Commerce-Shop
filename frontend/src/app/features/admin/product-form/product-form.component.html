@@ -1,22 +1,5 @@
 <div class="product-form-container">
-  <nav class="navbar">
-    <div class="nav-content">
-      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
-      <div class="nav-links">
-        <a routerLink="/" class="nav-link">Home</a>
-        <a routerLink="/products" class="nav-link">Products</a>
-        @if (authService.isAuthenticated$ | async) {
-          <a routerLink="/profile" class="nav-link">Profile</a>
-          <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
-        } @else {
-          <a routerLink="/login" class="nav-link">Login</a>
-        }
-      </div>
-    </div>
-  </nav>
-
-  <main class="main-content">
-    <div class="form-header">
+  <div class="form-header">
       <h1>{{ isEditMode ? 'Edit Product' : 'Create New Product' }}</h1>
       <button (click)="cancel()" class="btn btn-secondary">Cancel</button>
     </div>
@@ -199,6 +182,6 @@
         </div>
       </form>
     }
-  </main>
+  </div>
 </div>
 

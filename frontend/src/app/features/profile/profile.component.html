@@ -1,16 +1,5 @@
 <div class="profile-container">
-  <nav class="navbar">
-    <div class="nav-content">
-      <h1 class="logo"><a routerLink="/">E-Commerce Shop</a></h1>
-      <div class="nav-links">
-        <a routerLink="/" class="nav-link">Home</a>
-        <button (click)="authService.logout()" class="btn btn-secondary">Logout</button>
-      </div>
-    </div>
-  </nav>
-
-  <main class="main-content">
-    <div class="profile-card">
+  <div class="profile-card">
       <h1>Your Profile</h1>
 
       @if (user) {
@@ -164,5 +153,4 @@
         </form>
       }
     </div>
-  </main>
-</div>
+  </div>
