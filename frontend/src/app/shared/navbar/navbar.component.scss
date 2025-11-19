@@ -1,29 +1,36 @@
 .navbar {
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  border-bottom: 1px solid var(--color-gray-200);
 
   .nav-content {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: var(--spacing-md) var(--spacing-xl);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--spacing-xl);
 
-    @media (max-width: 768px) {
-      padding: 0 1rem;
+    @media (max-width: 1024px) {
+      padding: var(--spacing-md) var(--spacing-lg);
+      gap: var(--spacing-md);
     }
   }
 
   .logo {
     margin: 0;
     font-size: 1.5rem;
-    color: #667eea;
-    font-weight: 700;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
 
     a {
       color: inherit;
@@ -31,125 +38,110 @@
     }
 
     @media (max-width: 768px) {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
     }
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
 
     @media (max-width: 768px) {
-      gap: 0.75rem;
+      gap: var(--spacing-xs);
     }
   }
 
   .user-info {
-    color: #666;
-    font-weight: 500;
+    color: var(--color-gray-600);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-gray-100);
+    border-radius: var(--radius-md);
     
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       display: none;
     }
   }
 
   .nav-link {
-    color: #333;
+    color: var(--color-gray-700);
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-    padding: 0.5rem 0.75rem;
-    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    white-space: nowrap;
 
     &:hover {
-      color: #667eea;
-      background: #f0f0f0;
+      color: var(--color-primary);
+      background: var(--color-gray-100);
     }
 
     &.active {
-      color: #667eea;
-      background: #e8e8ff;
+      color: var(--color-primary);
+      background: #e0e7ff;
     }
 
     &.cart-link {
       position: relative;
       display: flex;
       align-items: center;
+      gap: var(--spacing-xs);
       
       .cart-icon {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
       
       .cart-badge {
         position: absolute;
-        top: -4px;
-        right: -8px;
-        background-color: #dc3545;
+        top: -6px;
+        right: -6px;
+        background: linear-gradient(135deg, var(--color-danger) 0%, #f87171 100%);
         color: white;
-        border-radius: 50%;
+        border-radius: 9999px;
         min-width: 20px;
         height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 0.7rem;
-        font-weight: 700;
-        padding: 0 4px;
+        font-weight: 800;
+        padding: 0 5px;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
       }
     }
 
     &.admin-link {
-      color: #ff6b6b;
-      font-weight: 600;
+      color: var(--color-danger);
+      font-weight: 700;
 
       &:hover {
-        color: #ff5252;
-        background: #ffe8e8;
+        color: var(--color-danger-dark);
+        background: #fee2e2;
       }
 
       &.active {
-        color: #ff5252;
-        background: #ffd0d0;
+        background: #fee2e2;
       }
     }
 
     @media (max-width: 768px) {
-      padding: 0.5rem;
-      font-size: 0.9rem;
+      padding: var(--spacing-sm);
+      font-size: 0.875rem;
     }
   }
 
   .btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s;
-
-    &.btn-primary {
-      background: #667eea;
-      color: white;
-
-      &:hover {
-        background: #5568d3;
-      }
-    }
-
-    &.btn-secondary {
-      background: #e2e8f0;
-      color: #475569;
-
-      &:hover {
-        background: #cbd5e1;
-      }
-    }
-
+    white-space: nowrap;
+    
     @media (max-width: 768px) {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.9rem;
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: 0.875rem;
     }
   }
 }

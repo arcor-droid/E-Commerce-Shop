@@ -2,7 +2,7 @@
   <main class="main-content">
     <!-- Back Button -->
     <button (click)="goBack()" class="btn btn-secondary back-btn">
-      ← Back to Products
+      ← Back
     </button>
 
     <!-- Error Message -->
@@ -24,9 +24,10 @@
       <div class="loading">Loading product...</div>
     }
 
-    <!-- Product Details -->
+    <!-- Product Details - Optimized for no scrolling -->
     @if (!isLoading && product) {
       <div class="product-detail">
+        <!-- Image Section -->
         <div class="product-image-section">
           <img 
             [src]="getProductImageUrl(product)" 
@@ -35,36 +36,35 @@
           />
         </div>
 
+        <!-- Info Section - Compact & Scrollable -->
         <div class="product-info-section">
-          <div class="category-badge">{{ product.category.title }}</div>
-          <h1 class="product-title">{{ product.title }}</h1>
-          
-          @if (product.description) {
-            <p class="product-description">{{ product.description }}</p>
-          }
+          <!-- Header -->
+          <div class="product-header">
+            <div class="category-badge">{{ product.category.title }}</div>
+            <h1 class="product-title">{{ product.title }}</h1>
+            @if (product.description) {
+              <p class="product-description">{{ product.description }}</p>
+            }
+          </div>
 
-          <div class="product-meta">
-            <div class="meta-item">
-              <span class="meta-label">Price:</span>
-              <span class="meta-value price">{{ product.base_price | currency:'EUR' }}</span>
+          <!-- Price & Stock - Combined Section -->
+          <div class="product-price-section">
+            <div class="price-wrapper">
+              <div class="price-label">Price</div>
+              <div class="price-value">{{ product.base_price | currency:'EUR' }}</div>
             </div>
-
-            <div class="meta-item">
-              <span class="meta-label">Stock:</span>
+            <div class="stock-info">
+              <div class="stock-label">Availability</div>
               @if (product.stock_quantity > 0) {
-                <span class="meta-value stock in-stock">
-                  {{ product.stock_quantity }} available
-                </span>
+                <div class="stock-value in-stock">
+                  {{ product.stock_quantity }} in stock
+                </div>
               } @else {
-                <span class="meta-value stock out-of-stock">
+                <div class="stock-value out-of-stock">
                   Out of Stock
-                </span>
+                </div>
               }
-            </div>
-
-            <div class="meta-item">
-              <span class="meta-label">Status:</span>
-              <span class="meta-value" [class.active]="product.is_active" [class.inactive]="!product.is_active">
+              <span class="status-badge" [class.active]="product.is_active" [class.inactive]="!product.is_active">
                 {{ product.is_active ? 'Active' : 'Inactive' }}
               </span>
             </div>
@@ -73,11 +73,11 @@
           <!-- Product Options -->
           @if (getOptions().length > 0) {
             <div class="product-options">
-              <h3>Select Options</h3>
+              <h3>Options</h3>
               <div class="options-grid">
                 @for (option of getOptions(); track option.key) {
                   <div class="option-item">
-                    <label class="option-label">{{ option.key }}:</label>
+                    <label class="option-label">{{ option.key }}</label>
                     @if (isArray(option.value)) {
                       <select [(ngModel)]="selectedOptions[option.key]" class="option-select">
                         @for (val of option.value; track val) {
@@ -93,10 +93,10 @@
             </div>
           }
 
-          <!-- Quantity Selector -->
+          <!-- Quantity Selector - Inline -->
           @if (product.stock_quantity > 0 && product.is_active) {
             <div class="quantity-section">
-              <label class="quantity-label">Quantity:</label>
+              <label class="quantity-label">Quantity</label>
               <div class="quantity-controls">
                 <button (click)="decreaseQuantity()" 
                         [disabled]="quantity <= 1"
@@ -119,34 +119,38 @@
 
           <!-- Actions -->
           <div class="product-actions">
-            @if (product.stock_quantity > 0 && product.is_active) {
-              @if (isAuthenticated()) {
-                <button (click)="addToCart()" 
-                        [disabled]="isAddingToCart"
-                        class="btn btn-primary btn-large">
-                  {{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}
-                </button>
-              } @else {
-                <button routerLink="/login" class="btn btn-primary btn-large">
-                  Login to Add to Cart
-                </button>
+            <div class="primary-actions">
+              @if (product.stock_quantity > 0 && product.is_active) {
+                @if (isAuthenticated()) {
+                  <button (click)="addToCart()" 
+                          [disabled]="isAddingToCart"
+                          class="btn btn-primary btn-lg">
+                    {{ isAddingToCart ? 'Adding...' : '🛒 Add to Cart' }}
+                  </button>
+                } @else {
+                  <button routerLink="/login" class="btn btn-primary btn-lg">
+                    Login to Purchase
+                  </button>
+                }
               }
-            }
+            </div>
 
             @if (authService.isAdmin()) {
-              <button routerLink="/admin/products/{{ product.id }}/edit" class="btn btn-secondary">
-                Edit Product
-              </button>
-              <button (click)="deleteProduct()" class="btn btn-danger">
-                Delete Product
-              </button>
+              <div class="admin-actions">
+                <button routerLink="/admin/products/{{ product.id }}/edit" class="btn btn-secondary btn-sm">
+                  ✏️ Edit
+                </button>
+                <button (click)="deleteProduct()" class="btn btn-danger btn-sm">
+                  🗑️ Delete
+                </button>
+              </div>
             }
           </div>
 
           <!-- Timestamps -->
           <div class="product-timestamps">
-            <small>Created: {{ product.created_at | date:'medium' }}</small>
-            <small>Updated: {{ product.updated_at | date:'medium' }}</small>
+            <small>Created {{ product.created_at | date:'short' }}</small>
+            <small>Updated {{ product.updated_at | date:'short' }}</small>
           </div>
         </div>
       </div>
