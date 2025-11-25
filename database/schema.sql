@@ -64,6 +64,8 @@ CREATE TABLE Products (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     image VARCHAR(500),
+    image_data LONGBLOB COMMENT 'Binary image data',
+    image_mime_type VARCHAR(50) COMMENT 'MIME type of the image (e.g., image/jpeg)',
     base_price DECIMAL(10, 2) NOT NULL,
     
     -- Options stored as JSON for flexibility
@@ -81,7 +83,8 @@ CREATE TABLE Products (
     
     INDEX idx_category (category_id),
     INDEX idx_active (is_active),
-    INDEX idx_title (title)
+    INDEX idx_title (title),
+    INDEX idx_products_has_image_data (image_data(1))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================
