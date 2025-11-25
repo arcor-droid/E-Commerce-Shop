@@ -19,6 +19,7 @@ Full-stack e-commerce application with **Angular 19**, **FastAPI**, and **MySQL*
 ```bash
 git clone https://github.com/arcor-droid/E-Commerce-Shop.git
 cd E-Commerce-Shop
+cp .env.example .env
 docker compose up --build
 ```
 
